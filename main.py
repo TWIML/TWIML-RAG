@@ -7,8 +7,8 @@ from streamlit_chat import message
 from langchain.chains import ConversationChain
 from langchain.llms import OpenAI
 
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv())
+# from dotenv import load_dotenv, find_dotenv
+# _ = load_dotenv(find_dotenv())
 
 import openai
 openai.api_key  = os.environ['OPENAI_API_KEY']
