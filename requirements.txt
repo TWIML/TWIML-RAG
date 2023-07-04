@@ -1,5 +1,8 @@
 langchain
+langchain[docarray]
 openai
 streamlit
 streamlit-chat
 beautifulsoup4
+tiktoken
+
