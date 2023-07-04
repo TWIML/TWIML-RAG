@@ -5,4 +5,5 @@ streamlit
 streamlit-chat
 beautifulsoup4
 tiktoken
+sentence_transformers
 
