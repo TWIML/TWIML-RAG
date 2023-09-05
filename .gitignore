@@ -4,3 +4,4 @@ data_input
 data_output
 secrets.toml
 config.py
+proj/speech_to_text/credentials.json
