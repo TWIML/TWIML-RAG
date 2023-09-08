@@ -3,3 +3,5 @@ data_input
 .env
 data_output
 secrets.toml
+config.py
+proj/speech_to_text/credentials.json
