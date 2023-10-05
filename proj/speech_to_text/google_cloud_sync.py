@@ -1,13 +1,9 @@
 import datetime
 import os
 
-from google.oauth2.credentials import Credentials
-from google.oauth2 import service_account
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
+from google_cloud_auth import gcloud_auth
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
-from google_cloud_auth import gcloud_auth
 
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
