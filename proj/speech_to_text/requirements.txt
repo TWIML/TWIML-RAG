@@ -1,0 +1,5 @@
+ google-auth
+ google-oauth
+ google-auth-oauthlib
+ googleapiclient
+ oogle-api-python-client
