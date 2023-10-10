@@ -1,0 +1,49 @@
+{
+  "taskGroups": [
+    {
+      "taskCount": "1",
+      "parallelism": "1",
+      "taskSpec": {
+        "computeResource": {
+          "boot_disk_mib": 100000
+        },
+        "runnables": [
+          {
+            "container": {
+              "imageUri": "us-central1-docker.pkg.dev/twiml-rag/twiml-rag-repo/twiml-rag-stt-image:tag1",
+              "entrypoint": "",
+              "volumes": []
+            }
+          }
+        ],
+        "volumes": []
+      }
+    }
+  ],
+  "allocationPolicy": {
+    "serviceAccount": {
+      "email": "rag-drive@twiml-rag.iam.gserviceaccount.com"
+    },
+    "instances": [
+      {
+        "installGpuDrivers": true,
+        "policy": {
+          "provisioningModel": "STANDARD",
+          "machineType": "n1-standard-1",
+          "accelerators": [
+            {
+                "type": "nvidia-tesla-t4",
+                "count": 1
+            }
+          ],
+          "bootDisk": {
+            "sizeGb": 100
+          }
+        }
+      }
+    ]
+  },
+  "logsPolicy": {
+    "destination": "CLOUD_LOGGING"
+  }
+}
