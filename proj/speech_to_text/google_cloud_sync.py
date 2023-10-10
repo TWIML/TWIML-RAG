@@ -2,11 +2,9 @@ import datetime
 import os
 
 from google_cloud_auth import gcloud_auth
+from google_cloud_utils import get_rag_drive_id, get_drive_folder_id, drive_query
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
-
-# If modifying these SCOPES, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/drive']
 
 def main():
     creds = gcloud_auth()
@@ -18,52 +16,21 @@ def main():
     # Build the Google Drive API client
     service = build('drive', 'v3', credentials=creds)
 
-    # Go to the shared drive TWIML-RAG
-    results = service.drives().list().execute()
-    # Go to the TWIML-RAG drive
-    for drive in results['drives']:
-        if drive['name'] == 'TWIML-RAG':
-            drive_id = drive['id']
-            break
-    else:
-        raise Exception('TWIML-RAG drive not found')
+    drive_id = get_rag_drive_id(service)
+    
+    #Get the folder id for the output transcripts folder
+    folder_id = get_drive_folder_id(service,query=f"'{drive_id}' in parents and name='output transcripts'")
 
-    # Go into the folder TWIML-RAG/output transcripts/transcripts
-    folder_id = ''
-    results = service.files().list(q="mimeType='application/vnd.google-apps.folder'",
-                                   corpora='drive', driveId=drive_id, supportsAllDrives=True,
-                                   includeItemsFromAllDrives=True).execute()
-    items = results.get('files', [])
-    for item in items:
-        if item['name'] == 'output transcripts':
-            folder_id = item['id']
-            break
-    if folder_id == '':
-        raise Exception('output transcripts folder not found')
-
-    results = service.files().list(corpora='drive', driveId=drive_id, supportsAllDrives=True,
-                                   includeItemsFromAllDrives=True, q=f"'{folder_id}' in parents").execute()
-    items = results.get('files', [])
-    for item in items:
-        if item['name'] == 'transcripts':
-            folder_id = item['id']
-            break
-
-    # Get the list of files in the folder transcripts using pagination and get the file modified date and time
+    #Get the folder id for the transcripts folder
+    folder_id = get_drive_folder_id(service, query=f"'{folder_id}' in parents and name='transcripts'")
+    
+    # Get the list of files in the folder transcripts and get the file modified date and time
     remote_files = {}
-    page_token = None
-    while True:
-        results = service.files().list(corpora='drive',
-                                       fields='nextPageToken, files(id, name, createdTime)',
-                                       driveId=drive_id, supportsAllDrives=True,
-                                       includeItemsFromAllDrives=True, q=f"'{folder_id}' in parents",
-                                       pageToken=page_token).execute()
-        items = results.get('files', [])
+    items = drive_query(service, query=f"'{folder_id}' in parents")
+
+    if len(items) > 0:
         for item in items:
             remote_files[item['name']] = (item['id'], item.get('createdTime'))
-        page_token = results.get('nextPageToken')
-        if not page_token:
-            break
 
     # Iterate through the files in the transcripts folder locally and upload them to the transcripts folder in
     # Google Drive

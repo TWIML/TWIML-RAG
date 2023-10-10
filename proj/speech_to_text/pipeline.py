@@ -5,12 +5,12 @@ import requests
 
 import whisper_pyannote_fusion
 
-from proj.speech_to_text.speaker_identification import run_llm_speaker_identification
+from speaker_identification import run_llm_speaker_identification
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
 from utils import check_required_dirs
+from google_cloud_utils import get_secret
 
-from config import HUGGING_FACE_API_KEY
-
+HUGGING_FACE_API_KEY = get_secret('HUGGING_FACE_API_KEY')
 
 def download_mp3(url_data, filename_mp3):
     """

@@ -1,8 +1,9 @@
 import json
 import os
 from langchain import OpenAI, PromptTemplate
+from google_cloud_utils import get_secret
 
-from config import OPENAI_API_KEY
+OPENAI_API_KEY = get_secret('OPENAI_API_KEY')
 
 # Template for the prompt for the speaker identification
 speaker_id_template = """

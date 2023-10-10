@@ -66,7 +66,8 @@ def get_rss_feed_data(rss_filename):
 
 
 if __name__ == '__main__':
-    # get_rss_feed(RSS_URL, RSS_FILENAME)
+    get_rss_feed(RSS_URL, RSS_FILENAME)
     podcast_data = get_rss_feed_data(RSS_FILENAME)
     print('Total episodes: ', len(podcast_data))
-    print(podcast_data[0])
+    print('Latest episode: ', list(podcast_data)[0])
+    print(podcast_data[list(podcast_data)[0]])
