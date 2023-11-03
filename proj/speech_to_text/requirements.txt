@@ -14,5 +14,3 @@ setuptools>=65
 nltk
 langchain
 whisper_pyannote_fusion
-whisperx @ git+https://github.com/m-bain/whisperx.git
-

@@ -10,7 +10,7 @@
         "runnables": [
           {
             "container": {
-              "imageUri": "us-central1-docker.pkg.dev/twiml-rag/twiml-rag-repo/twiml-rag-stt-image:tag1",
+              "imageUri": "us-central1-docker.pkg.dev/twiml-rag/twiml-rag-repo/twiml-rag-stt-image:nvcr-base-no-preload",
               "entrypoint": "",
               "volumes": []
             }

@@ -1,6 +1,7 @@
 from google_cloud_auth import gcloud_auth
 from googleapiclient.discovery import build
 from google_cloud_utils import get_latest_episode_from_drive
+from utils import check_required_dirs
 from pipeline import run_pipeline
 from rss_process import get_rss_feed_data, RSS_FILENAME
 
@@ -23,5 +24,6 @@ def run():
         run_pipeline(last_processed + 1, last_published)
     
 if __name__ == '__main__':
+    check_required_dirs()
     run()
 

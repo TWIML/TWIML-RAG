@@ -1,4 +1,4 @@
-from google.cloud import storage, secretmanager
+from google.cloud import secretmanager
 from google_cloud_auth import gcloud_auth
 from googleapiclient.discovery import build
 
