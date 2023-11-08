@@ -20,11 +20,11 @@ def run():
     last_processed = get_latest_episode_from_drive()
     last_published = get_latest_ep_from_rss()
 
-    # print(f'Last processed episode: {last_processed}')
+    print(f'Last processed episode: {last_processed}')
     print(f'Last published episode: {last_published}')
 
     if last_published > last_processed:
-       run_pipeline(last_processed + 1, last_published)
+        run_pipeline(last_processed + 1, last_published)
 
 if __name__ == '__main__':
     check_required_dirs()
