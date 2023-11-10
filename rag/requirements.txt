@@ -2,3 +2,5 @@ streamlit
 streamlit_chat
 langchain
 sentence_transformers
+python-dotenv
+unstructured[md]
