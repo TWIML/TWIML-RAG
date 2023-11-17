@@ -5,11 +5,12 @@ import requests
 
 import whisper_pyannote_fusion
 
-from proj.speech_to_text.speaker_identification import run_llm_speaker_identification
+from speaker_identification import run_llm_speaker_identification
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
 from utils import check_required_dirs
+from google_cloud_utils import get_secret, upload_files_to_drive
 
-from config import HUGGING_FACE_API_KEY
+HUGGING_FACE_API_KEY = get_secret('HUGGING_FACE_API_KEY')
 
 
 def download_mp3(url_data, filename_mp3):
@@ -61,10 +62,9 @@ def process_episode(episode):
     whisper_json_filename = os.path.join('asr', file_prefix + '.whisper.json')
     pyannote_json_filename = os.path.join('asr', file_prefix + '.pyannote.json')
     pyannote_whisper_json_filename = os.path.join('asr', file_prefix + '.pyannote_whisper.json')
-    whisperx_alignment_json_filename = os.path.join('asr', file_prefix + '.whisperx.json')
     output_json_file = os.path.join('transcripts', file_prefix + '.output.json')
     corrected_json_file = os.path.join('transcripts', file_prefix + '.corrected.json')
-    markdown_ouput = os.path.join('markdown', file_prefix + '.md')
+    markdown_output = os.path.join('markdown', file_prefix + '.md')
     speakers_json_filename = os.path.join('asr', file_prefix + '.speakers.json')
 
     initial_prompt = 'TWIML with Sam Charrington. ' + episode['title'] + ' ' + episode['description']
@@ -74,7 +74,7 @@ def process_episode(episode):
                                                         whisper_json_file=whisper_json_filename,
                                                         pyannote_json_file=pyannote_json_filename,
                                                         pyannote_whisper_json_filename=pyannote_whisper_json_filename,
-                                                        whisperx_alignment_json_filename=whisperx_alignment_json_filename,
+                                                        whisperx_alignment_json_filename=None,
                                                         output_json_file=output_json_file,
                                                         corrected_json_file=corrected_json_file,
                                                         initial_prompt=initial_prompt,
@@ -85,31 +85,17 @@ def process_episode(episode):
         corrected_json['description'] = episode['description']
         corrected_json['link'] = episode['url']
         corrected_json = add_speaker_identification(corrected_json, speakers_json_filename)
-        whisper_pyannote_fusion.transcript_to_workdown(corrected_json, markdown_ouput)
+        whisper_pyannote_fusion.transcript_to_workdown(corrected_json, markdown_output)
+
+        # Upload the files to google drive into the appropriate folders
+        upload_files_to_drive(
+            [whisper_json_filename, pyannote_json_filename, pyannote_whisper_json_filename, speakers_json_filename],
+            'asr')
+        upload_files_to_drive([corrected_json_file], 'transcripts')
+        upload_files_to_drive([markdown_output], 'markdown')
+
     except Exception as e:
         print(f'Error processing episode {episode["episode"]}: {e}. Skipping ...')
-
-    output2_json_file = os.path.join('transcripts', file_prefix + '.output2.json')
-    markdown1_output = os.path.join('markdown', file_prefix + '.1.md')
-
-    try:
-        whisper_pyannote_fusion.whisper_pyannote_fusion(audio_filename, 'whisperx_align_pyannote',
-                                                        whisper_json_file=whisper_json_filename,
-                                                        pyannote_json_file=pyannote_json_filename,
-                                                        pyannote_whisper_json_filename=pyannote_whisper_json_filename,
-                                                        whisperx_alignment_json_filename=whisperx_alignment_json_filename,
-                                                        output_json_file=output2_json_file,
-                                                        initial_prompt=initial_prompt,
-                                                        HUGGING_FACE_API_KEY=HUGGING_FACE_API_KEY)
-        with open(output2_json_file, 'r') as f:
-            corrected_json = json.load(f)
-        corrected_json['title'] = episode['title']
-        corrected_json['description'] = episode['description']
-        corrected_json['link'] = episode['url']
-        corrected_json = add_speaker_identification(corrected_json, speakers_json_filename)
-        whisper_pyannote_fusion.transcript_to_workdown(corrected_json, markdown1_output)
-    except Exception as e:
-        print(f'Error processing whisperx episode {episode["episode"]}: {e}. Skipping ...')
 
 
 def run_pipeline(start, end=None):

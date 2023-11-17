@@ -1,5 +1,24 @@
- google-auth
- google-oauth
- google-auth-oauthlib
- googleapiclient
- oogle-api-python-client
+torch
+torchaudio
+google-auth
+google-oauth
+google-auth-oauthlib
+google-api-core
+google-api-python-client
+google-cloud-secret-manager
+google-cloud-storage
+faster-whisper>=0.8
+openai==0.28.1
+transformers
+ffmpeg-python>=0.2
+pandas
+setuptools>=65
+nltk
+langchain==0.0.331
+intervaltree
+jiwer
+spacy
+jellyfish
+whisper-normalizer
+pyannote-audio
+whisper_pyannote_fusion
