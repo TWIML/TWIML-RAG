@@ -7,3 +7,29 @@ This project aims to create a generative AI dialog application as a learning exe
 
 ### Chatbot
 [proj/chatbot](proj/chatbot)
+
+```mermaid
+flowchart TB
+  subgraph TWIML Podcast RAG
+    subgraph Transcription Pipeline
+        direction LR
+        A[Podcast Audio File - mp3 fa:fa-file-audio] --> B["AUDIO-TO-TEXT
+        - WhisperX -"]
+        A --> C["SPEAKER IDENTIFICATION
+        - pyannote.audio -"]
+        G[Shownotes] --> H[METADATA]
+        I[Web Crawls] --> H
+        H --> D
+        B --> D[FUSION]
+        C --> D
+        D --> E[(fa:fa-file Transcription Data Files)]
+        E --> F[Pinecone Index]
+    end
+    subgraph "Chatbot using Augmented Generation"
+        direction LR
+            P[QUERY] ---> Q[RETRIEVER]
+            Q ---> R[GENERATOR]
+            Q <-- augmentation --> F
+    end
+  end
+```
