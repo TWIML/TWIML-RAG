@@ -6,7 +6,7 @@ This project aims to create a generative AI dialog application as a learning exe
 [proj/transcriber](proj/transcriber)
 
 ### Chatbot
-[proj/chatbot](proj/rag)
+[rag](rag)
 
 ```mermaid
 flowchart TB
