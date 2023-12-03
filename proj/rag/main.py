@@ -15,9 +15,9 @@ from utils import find_match, get_conversation_string, query_refiner
 from dotenv import load_dotenv
 
 # Load the dotenv file
-load_dotenv()
+load_dotenv(override=True)
 
-openaiKey = os.getenv('OPENAI_KEY')
+openaiKey = os.getenv('OPENAI_API_KEY')
 
 # Streamlit's header at the topmost page
 st.subheader("RAG with Langchain, GPT-4, Pinecone, and Streamlit on TWIML Podcasts")
@@ -29,7 +29,8 @@ if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
 if 'buffer_memory' not in st.session_state:             # Using 1 in Conversational memory
-    st.session_state.buffer_memory = ConversationBufferWindowMemory(k=1, return_messages = True)
+    memory_k = os.getenv('MEMORY_K')
+    st.session_state.buffer_memory = ConversationBufferWindowMemory(k=memory_k, return_messages=True)
 
 
 system_msg_template = SystemMessagePromptTemplate.from_template(
