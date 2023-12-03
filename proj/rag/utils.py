@@ -6,18 +6,21 @@ import os
 from dotenv import load_dotenv
 
 # Load the dotenv file
-load_dotenv()
+load_dotenv(override=True)
 
-openaiKey = os.getenv('OPENAI_KEY')
+openaiKey = os.getenv('OPENAI_API_KEY')
 pineconeKey = os.getenv('PINECONE_KEY')
 
 openai.api_key = openaiKey
-model = SentenceTransformer('all-MiniLM-L6-v2')
+emb_model_name = os.getenv('EMB_MODEL')
+emb_model = SentenceTransformer(emb_model_name)
 
 pineconeEnvironment = os.getenv('PINECONE_ENVIRONMENT')
 pineconeIndexName = os.getenv('PINECONE_INDEX_NAME')
 pinecone.init(api_key=pineconeKey, environment=pineconeEnvironment)
 index = pinecone.Index(pineconeIndexName)
+
+vect_top_p = os.getenv('VECT_TOP_P')
 
 """
 This method, takes an input, encodes it using a model, and queries an index to find the top three matches. 
@@ -26,8 +29,8 @@ This method, takes an input, encodes it using a model, and queries an index to f
  'full name: rest of the sentence' format. 
 """
 def find_match(input):
-    input_em = model.encode(input).tolist()
-    result = index.query(input_em, top_k=3, includeMetadata=True)
+    input_em = emb_model.encode(input).tolist()
+    result = index.query(input_em, top_k=8, includeMetadata=True)
     # For inserting the speakers metadata to the front of each sentence
     # Returns the source (containing full name) and text (contents) of the JSON 
     # that we get from Pinecone in 'source: text' format
@@ -48,7 +51,7 @@ def query_refiner(conversation, query):
         messages=[{'role': 'user', 'content': prompt}],
         temperature=0.7,
         max_tokens=256,
-        top_p=1,
+        top_p=vect_top_p,
         frequency_penalty=0,
         presence_penalty=0
     )
