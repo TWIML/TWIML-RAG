@@ -1,17 +1,12 @@
 import os
 
 from google.cloud import secretmanager
-from google.cloud import storage, secretmanager
 from googleapiclient.http import MediaFileUpload
 from google_cloud_auth import gcloud_auth
 from googleapiclient.discovery import build
+from dotenv import dotenv_values
 
-PROJECT_NAME = 'twiml-rag'
-PROJECT_ID = '570511745125'
-BUCKET = 'twiml-rag-1'
-METADATA_FOLDER = 'metadata'
-LATEST_EP_BLOB = 'last-ep-processed'
-
+config = dotenv_values(".config")
 
 def get_drive_client():
     creds = gcloud_auth()
@@ -27,7 +22,7 @@ def get_drive_client():
 
 def get_latest_episode_from_drive():
     service = get_drive_client()
-    drive_id = get_rag_drive_id(service)
+    drive_id = get_rag_drive_id()
     folder_id = get_drive_folder_id(service, query=f"'{drive_id}' in parents and name='output transcripts'")
     folder_id = get_drive_folder_id(service, query=f"'{folder_id}' in parents and name='transcripts'")
 
@@ -37,22 +32,11 @@ def get_latest_episode_from_drive():
     return latest_ep
 
 
-def get_rag_drive_id(service):
-    # Go to the shared drive TWIML-RAG
-    results = service.drives().list().execute()
-    # Go to the TWIML-RAG drive
-    for drive in results['drives']:
-        if drive['name'] == 'TWIML-RAG':
-            drive_id = drive['id']
-            break
-    else:
-        raise Exception('TWIML-RAG drive not found')
-
-    return drive_id
-
+def get_rag_drive_id():
+    return config['DRIVE_FOLDER_ID']
 
 def drive_query(service, query):
-    twiml_rag_drive = get_rag_drive_id(service)
+    twiml_rag_drive = get_rag_drive_id()
     page_token = None
     items = []
     pages = 0
@@ -93,7 +77,7 @@ def get_drive_folder_id(service, query=''):
 
 def get_secret(secret_id):
     client = secretmanager.SecretManagerServiceClient()
-    name = f'projects/{PROJECT_ID}/secrets/{secret_id}/versions/latest'
+    name = f'projects/{config["GCP_PROJECT_ID"]}/secrets/{secret_id}/versions/latest'
     response = client.access_secret_version(name=name)
     return response.payload.data.decode('UTF-8')
 
@@ -108,7 +92,7 @@ def upload_files_to_drive(files, gd_folder_name, skip_existing=True):
     @param skip_existing: If True, skip the file if it already exists in Google Drive. Otherwise trash
     """
     service = get_drive_client()
-    drive_id = get_rag_drive_id(service)
+    drive_id = get_rag_drive_id()
 
     # Get the folder id for the output transcripts folder
     folder_id = get_drive_folder_id(service, query=f"'{drive_id}' in parents and name='output transcripts'")

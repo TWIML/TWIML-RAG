@@ -41,7 +41,7 @@ write_files:
         --device /dev/nvidia-uvm:/dev/nvidia-uvm \
         --device /dev/nvidiactl:/dev/nvidiactl \
         --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 \
-        --rm -u 2000 --name=twiml-rag-container us-central1-docker.pkg.dev/twiml-rag/twiml-rag-repo/twiml-rag-stt-image:nvcr-base-no-preload
+        -u 2000 --name=twiml-rag-container us-central1-docker.pkg.dev/twiml-rag/twiml-rag-repo/twiml-rag-stt-image:nvcr-base-no-preload
       StandardOutput=journal+console
       StandardError=journal+console
 

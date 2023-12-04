@@ -40,7 +40,7 @@ To deploy the project to a VM in GCP, the following command is used:
 gcloud compute instances create instance-1 \
   --project=twiml-rag \
   --zone=europe-central2-b \
-  --machine-type=n1-standard-1 \
+  --machine-type=n1-standard-8 \
   --accelerator=count=1,type=nvidia-tesla-t4 \
   --image=projects/cos-cloud/global/images/cos-stable-109-17800-66-27 \
   --boot-disk-size=100GB \
@@ -51,11 +51,11 @@ gcloud compute instances create instance-1 \
   --provisioning-model=STANDARD \
   --service-account=rag-drive@twiml-rag.iam.gserviceaccount.com \
   --scopes=https://www.googleapis.com/auth/drive,https://www.googleapis.com/auth/cloud-platform \
-  --metadata-from-file=user-data=gcloud-twimlrag-init.yml \
   --no-shielded-secure-boot \
   --shielded-vtpm \
   --shielded-integrity-monitoring \
-  --labels=goog-ec-src=vm_add-gcloud,container-vm=cos-stable-109-17800-66-27
+  --labels=goog-ec-src=vm_add-gcloud,container-vm=cos-stable-109-17800-66-27 \
+  --metadata-from-file=user-data=gcloud-twimlrag-init.yml
   ```
 
   Note:

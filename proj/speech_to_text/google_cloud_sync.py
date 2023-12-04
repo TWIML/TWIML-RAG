@@ -16,7 +16,7 @@ def main():
     # Build the Google Drive API client
     service = build('drive', 'v3', credentials=creds)
 
-    drive_id = get_rag_drive_id(service)
+    drive_id = get_rag_drive_id()
     
     #Get the folder id for the output transcripts folder
     folder_id = get_drive_folder_id(service,query=f"'{drive_id}' in parents and name='output transcripts'")

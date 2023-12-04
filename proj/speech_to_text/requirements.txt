@@ -1,13 +1,9 @@
-torch
-torchaudio
-google-auth
-google-oauth
-google-auth-oauthlib
-google-api-core
 google-api-python-client
 google-cloud-secret-manager
-google-cloud-storage
-faster-whisper>=0.8
+python-dotenv
+torch
+torchaudio
+faster-whisper
 openai==0.28.1
 transformers
 ffmpeg-python>=0.2
