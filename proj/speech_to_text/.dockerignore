@@ -3,7 +3,7 @@
 
 # Ignore generated/downloaded files
 **/*.pyc
-proj/speech_to_text/asr/*
-proj/speech_to_text/markdown/*
-proj/speech_to_text/rss/*
-proj/speech_to_text/podcasts/*
+asr/*
+markdown/*
+rss/*
+podcasts/*

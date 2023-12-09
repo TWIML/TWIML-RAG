@@ -70,6 +70,7 @@ def process_episode(episode):
     initial_prompt = 'TWIML with Sam Charrington. ' + episode['title'] + ' ' + episode['description']
 
     try:
+        print(f'Processing {episode["episode"]}...')
         whisper_pyannote_fusion.whisper_pyannote_fusion(audio_filename, 'correct_pyannote_with_whisper',
                                                         whisper_json_file=whisper_json_filename,
                                                         pyannote_json_file=pyannote_json_filename,
