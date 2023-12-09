@@ -1,8 +1,0 @@
-langchain
-langchain[docarray]
-openai
-streamlit
-streamlit-chat
-sentence_transformers
-chromadb
-
