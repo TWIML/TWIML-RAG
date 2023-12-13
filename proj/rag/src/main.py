@@ -11,8 +11,10 @@ from langchain.prompts import (
 )
 import streamlit as st
 from streamlit_chat import message
-from utils import find_match, get_conversation_string, query_refiner
 from dotenv import load_dotenv
+
+# local imports
+from src.helpers.utils import find_match, get_conversation_string, query_refiner
 
 # Load the dotenv file
 load_dotenv(override=True)
