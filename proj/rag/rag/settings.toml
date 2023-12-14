@@ -1,0 +1,9 @@
+[pinecone-embeddings]
+EMBEDDING_MODEL = "multi-qa-mpnet-base-dot-v1"
+EMBEDDING_DIMENSIONS = 768 # NOTE: the dev has to manually set this according to above model's known dimensions
+
+[openai-conversation]
+VECTOR_TOP_P = 8
+
+[streamlit-application]
+MEMORY_K = 5

@@ -5,7 +5,7 @@ description = "twiml-rag application & model configuration (+ exploratory jupyte
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 packages = [
-    {include="src"},
+    {include="rag"},
 ]
 
 [tool.poetry.dependencies]

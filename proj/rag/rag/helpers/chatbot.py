@@ -6,11 +6,12 @@ import os
 from dotenv import load_dotenv
 
 # local imports
-from src.helpers.config_utils import load_settings_objects
+from rag.configs.rag_settings import SettingsHolder
 
 # load settings for openai, pinecone etc.
-settings_objects = load_settings_objects()
-openai_conversation_settings = settings_objects['openai-conversation']
+settings_objects = SettingsHolder()
+openai_conversation_settings = settings_objects.OpenAi
+pinecone_embeddings_settings = settings_objects.Pinecone
 
 # Load the dotenv file
 load_dotenv(override=True)
@@ -18,16 +19,19 @@ load_dotenv(override=True)
 openaiKey = os.getenv('OPENAI_API_KEY')
 pineconeKey = os.getenv('PINECONE_KEY')
 
-openai.api_key = openaiKey
-emb_model_name = os.getenv('EMB_MODEL')
-emb_model = SentenceTransformer(emb_model_name)
-
+# pinecone
 pineconeEnvironment = os.getenv('PINECONE_ENVIRONMENT')
 pineconeIndexName = os.getenv('PINECONE_INDEX_NAME')
 pinecone.init(api_key=pineconeKey, environment=pineconeEnvironment)
 index = pinecone.Index(pineconeIndexName)
 
+# open-ai
+openai.api_key = openaiKey
 vect_top_p = openai_conversation_settings.VECTOR_TOP_P
+
+# embeddings
+emb_model_name = pinecone_embeddings_settings.EMBEDDING_MODEL
+emb_model = SentenceTransformer(emb_model_name)
 
 """
 This method, takes an input, encodes it using a model, and queries an index to find the top three matches. 

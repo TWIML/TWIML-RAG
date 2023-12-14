@@ -1,8 +1,0 @@
-[pinecone-embeddings]
-# the model used to embed transcripts & queries for the rag-step - which retrieves relevant docs to pass to the llm chatbot as grounding context
-EMBEDDING_MODEL = "multi-qa-mpnet-base-dot-v1"
-
-[openai-conversation]
-# TODO: understand what these settings do
-VECTOR_TOP_P = 8
-MEMORY_K = 5

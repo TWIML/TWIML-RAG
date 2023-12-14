@@ -17,3 +17,16 @@
             - the .venv files will then live inside the folder you ran the `poetry install` in
             - you can remove any envs using `poetry env remove {path|env-name}`
             - you can exit your virtual env using `deactivate`
+
+2. downloading the transcription data from google-drive
+    - download the data from https://drive.google.com/drive/folders/0AL0-_RLA7pqDUk9PVA - if you don't have access ask Sam or Darin
+    - create a folder outside of the `TWIML-RAG` repo (so your data download doesn't get uploaded to github when pushing) & remember the full path of the folder with the data in it eg. `/home/<username>/twiml-transcripts`
+
+3. setting up your `.env` file with necessary keys for apis & cloud services
+    - sign up to the openai api, or ask Sam for the shared projects' openai api key if there is one
+    - sign up to pinecone, or ask for the shared projects' pinecone api key if there is one
+    - run `python rag/setup.py` from within the top-level `rag` folder i.e. where this README is
+        - enter your keys as prompted, and if you need to edit them change your local `.env`
+        - if you need to add new keys to the process add them to the `RequiredEnvVars` type in `rag/rag/configs/env_vars.py` 
+
+4. getting your pinecone index set up (dimensions etc.)
