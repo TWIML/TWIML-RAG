@@ -14,7 +14,12 @@ from streamlit_chat import message
 from dotenv import load_dotenv
 
 # local imports
-from src.helpers.utils import find_match, get_conversation_string, query_refiner
+from src.helpers.config_utils import load_settings_objects
+from src.helpers.llm_utils import find_match, get_conversation_string, query_refiner
+
+# load settings for openai, pinecone etc.
+settings_objects = load_settings_objects()
+openai_conversation_settings = settings_objects['openai-conversation']
 
 # Load the dotenv file
 load_dotenv(override=True)
@@ -31,7 +36,7 @@ if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
 if 'buffer_memory' not in st.session_state:             # Using 1 in Conversational memory
-    memory_k = os.getenv('MEMORY_K')
+    memory_k = openai_conversation_settings.MEMORY_K
     st.session_state.buffer_memory = ConversationBufferWindowMemory(k=memory_k, return_messages=True)
 
 

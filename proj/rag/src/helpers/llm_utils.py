@@ -5,6 +5,13 @@ import streamlit as st
 import os
 from dotenv import load_dotenv
 
+# local imports
+from src.helpers.config_utils import load_settings_objects
+
+# load settings for openai, pinecone etc.
+settings_objects = load_settings_objects()
+openai_conversation_settings = settings_objects['openai-conversation']
+
 # Load the dotenv file
 load_dotenv(override=True)
 
@@ -20,7 +27,7 @@ pineconeIndexName = os.getenv('PINECONE_INDEX_NAME')
 pinecone.init(api_key=pineconeKey, environment=pineconeEnvironment)
 index = pinecone.Index(pineconeIndexName)
 
-vect_top_p = os.getenv('VECT_TOP_P')
+vect_top_p = openai_conversation_settings.VECTOR_TOP_P
 
 """
 This method, takes an input, encodes it using a model, and queries an index to find the top three matches. 
