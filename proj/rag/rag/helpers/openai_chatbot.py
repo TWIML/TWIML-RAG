@@ -36,12 +36,16 @@ OpenAiClient = OpenAI(api_key=OPENAI_API_KEY)
 EMBEDDING_MODEL_NAME = pinecone_embeddings_settings.EMBEDDING_MODEL
 EmbeddingModel = SentenceTransformer(EMBEDDING_MODEL_NAME)
 
+
+'''
+A helper function to get a usable openai model for the user, may need to be extended
+to select from the list rather than only checking if constants from `settings.py` 
+are in the list of accepted ones for the api-account
+'''
 def get_usable_openai_model():
     models_list = OpenAiClient.models.list()
     accesible_model_names = []
-    print(f'\n\n{models_list}')
     for m in models_list:
-        print(m.id)
         accesible_model_names.append(m.id)
 
     if OPENAI_CHAT_MODEL in accesible_model_names:
@@ -56,8 +60,10 @@ def get_usable_openai_model():
         We might need to configure an alternative way of selecting a chat model from all available options...
         Please see the README taskboard, or contact someone on the slack for implementation discussion
         ''')
-    print(f'''
-    You will be using `{model_name}` as your openai chatbot model
+    print(f'''\n\n
+            #############################################################
+            You will be using `{model_name}` as your openai chatbot model
+            #############################################################
     ''')
     return model_name
 

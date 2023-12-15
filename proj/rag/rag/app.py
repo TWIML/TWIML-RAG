@@ -1,5 +1,6 @@
 '''
 The whole page when executed via. `streamlit run <filename>.py` re-runs in its entirety on any ui update/interaction or change in state etc.
+- this includes refreshing the __init__.py and all setup, which is not ideal
 '''
 
 import os, sys
