@@ -39,8 +39,6 @@ OpenAiClient = OpenAI(api_key=OPENAI_API_KEY)
 
 if __name__ == "__main__": # app entry point (to avoid reloading whole file)
 
-    print(OpenAiClient.models.list()); sys.exit(1)
-
     # Streamlit's header at the topmost page
     st.subheader("RAG with Langchain, GPT-4, Pinecone, and Streamlit on TWIML Podcasts")
 
