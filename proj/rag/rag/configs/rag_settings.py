@@ -22,6 +22,8 @@ class PineconeSettings:
 
 @dataclass
 class OpenAiSettings:
+    CHAT_MODEL: str # is the preferred one if you have access
+    ALTERNATIVE_CHAT_MODEL: str # NOTE: should be the cheapest backup with widest accessibility for users
     VECTOR_TOP_P: int # NOTE: understand and make comment on what this does
 
 @dataclass

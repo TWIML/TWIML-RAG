@@ -1,7 +1,14 @@
+'''
+The whole page when executed via. `streamlit run <filename>.py` re-runs in its entirety on any ui update/interaction or change in state etc.
+so for eg. the setup is being done over and over again which is undesirable as it processes the docs, loads to pinecone etc. repeatedly
+'''
+
 # running setup before imports to load singletons - NOTE: this is probably poor practice, please advise any better architecture
 from rag.setup import run_setup; run_setup()
 
-import os
+import os, sys
+from warnings import warn
+from openai import OpenAI, NotFoundError
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
@@ -22,12 +29,17 @@ from rag.helpers.chatbot import find_match, get_conversation_string, query_refin
 # load settings for openai, pinecone etc.
 settings_objects = SettingsHolder()
 streamlit_application_settings = settings_objects.Streamlit
+openai_conversation_settings = settings_objects.OpenAi
 
-# Load the dotenv file
+OPENAI_CHAT_MODEL = openai_conversation_settings.CHAT_MODEL
+OPENAI_CHAT_MODEL_ALTERNATIVE = openai_conversation_settings.ALTERNATIVE_CHAT_MODEL
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OpenAiClient = OpenAI(api_key=OPENAI_API_KEY)
 
 
 if __name__ == "__main__": # app entry point (to avoid reloading whole file)
+
+    print(OpenAiClient.models.list()); sys.exit(1)
 
     # Streamlit's header at the topmost page
     st.subheader("RAG with Langchain, GPT-4, Pinecone, and Streamlit on TWIML Podcasts")
@@ -51,9 +63,23 @@ if __name__ == "__main__": # app entry point (to avoid reloading whole file)
     prompt_template = ChatPromptTemplate.from_messages(
         [system_msg_template, MessagesPlaceholder(variable_name="history"), human_msg_template])
 
+    def set_chatbot(model_name):
+        try:
+            llm = ChatOpenAI(model_name=model_name, openai_api_key=OPENAI_API_KEY) # type: ignore
+            return llm, ''
+        except NotFoundError as e:
+            warn(f'''You do not seem to have access to the openai model: {model_name} ... trying an alternative''')
+            return None, e
 
-    # ChatOpenAI uses GPT-4 as its model, coupled with openAPI key from utils.py
-    llm = ChatOpenAI(model_name="gpt-4", openai_api_key=OPENAI_API_KEY) # type: ignore # NOTE: added because the lib doesn't seem to have defined it's accepted args in a standard/identifiable manner
+    preferred_llm, _ = set_chatbot(OPENAI_CHAT_MODEL)
+    if preferred_llm is not None:
+        llm = preferred_llm
+    else:
+        llm, _ = set_chatbot(OPENAI_CHAT_MODEL_ALTERNATIVE)
+        if _ != '':
+            # NOTE: when they don't have access to even alternative model - NOTE: improve the exception handling, probably sort most of it in tests on cicd itself, and maybe better way to know what openai models the user has access to via. their api
+            raise _
+
     # Not fully using the buffered memory here, as has been reduced to k=1 above.
     # May increase the conversational buffer above to see effects
     conversation = ConversationChain(

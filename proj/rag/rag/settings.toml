@@ -3,6 +3,8 @@ EMBEDDING_MODEL = "multi-qa-mpnet-base-dot-v1"
 EMBEDDING_DIMENSIONS = 768 # just used for reference atm
 
 [openai-conversation]
+CHAT_MODEL = 'gpt-4' # not all have access to this
+ALTERNATIVE_CHAT_MODEL = 'gpt-3' # in case above fails
 VECTOR_TOP_P = 8
 
 [streamlit-application]
