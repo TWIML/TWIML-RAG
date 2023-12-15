@@ -24,6 +24,8 @@ from rag.helpers.openai_chatbot import find_match, get_conversation_string, quer
 settings_objects = SettingsHolder()
 streamlit_application_settings = settings_objects.Streamlit
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 if __name__ == "__main__": # app entry point (to avoid reloading whole file)
 
     # Streamlit's header at the topmost page
