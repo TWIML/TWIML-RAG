@@ -65,6 +65,15 @@
 
 # Possible Architecture
 - removing the folder levels, and keeping main src at top-level, with tests on same level & all set-up and config there as well - with only 1 set of config for a repo (see below)
+    - having at the top-level of the repo 
+        - all the pkg-dependency, git, cicd files, README etc.
+        - the `tests` folder
+        - the `prompts` folder - for storing prompts
+        - the `src` folder - where all the functionality for class interfaces, config, helpers, connections, processing etc. lives
+        - the `app` folder - where the application ui and backend functionality lives
+            - maybe split up into `frontend` & `backend`
+            - `backend` would handle connection to the other repos or steps in the pipeline, cloud services etc.
+            - `frontend` for the user interactivity components and structure etc.
 - splitting folders into separate repos, each w. their own requirements
     - `transcription-pipeline` repo: (triggered by rss/pubsub) 
         - for pulling audio files, doing speech to text, and loading transcripts to google storage
@@ -74,6 +83,7 @@
         - `app` folder: hosting the application back & frontend for user interactivity actions & interaction with rag model
         ...alternatively these could both be separate with the `app` living on a always on server, and the `rag` being a repo for experiments, with the final model pushed to some kind of model registry with an api into it perhaps? this could also permit to have different model versions for different users (eg. payment level - free or so on), or instead of a registry could create the model-api functionality ourselves but difficult to achieve as must have to have an always on server to listen for requests and run through the model etc.
             - note for self: i may be mistaken in using the term `model` and thinking in an outdated way, the model is really just open source, we might actually just be storing config for api's and selections of embedding types etc. after having tested them, in which case the model api exists already, we just need to store our final config after experimentation, so could still have separate `rag` and `app` repos, latter for productionised web-application, former for experiments and maybe linked to some external experiment tracking eg. in `ml-flow` or `w&b` etc.
+
 
 # Setup & Resource Requests
 - would be good if we could have a shared `pinecone` & `open-ai` account and permit devs to use the keys, like a service account
