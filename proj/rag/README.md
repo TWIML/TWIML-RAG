@@ -1,3 +1,6 @@
+# Tasks & next-steps
+*next steps for extending the codebase & tasklists to select from (or add to for people to pick up work from, get ideas etc.) - to be written*
+
 # How to contribute
 *how a dev can contribute to the project - to be written*
 
