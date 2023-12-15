@@ -1,4 +1,22 @@
-# Installation
+# How to contribute
+*how a dev can contribute to the project - to be written*
+
+# Model evaluation and comparison
+*model comparison tables, evaluation metrics and links - to be written*
+
+# Prompt ideas and discussion
+*standard prompts for different aspects and requirements of the rag and user interaction - to be written*
+
+# Background to RAG & LLM operation
+*explanations of how RAG & LLM's work and the libs, tools and apis used for them such as vector dbs, model apis, chat-gpt etc. - to be written*
+
+# App user features and interactivity
+*sections of the app, features for the user and how they might interact w. podcasts and learn ml etc. - to be written*
+
+# Codebase architecture and solution design
+*the folder structure, class interfaces etc. and how this folder/repo integrates with the overall solution (cloud services & pipeline) - to be written*
+
+# Installation and initial setup (for devs)
 0. make sure you have (`python`)[https://www.python.org/downloads/] installed - the version must be greater than `3.8`
 
 1. package dependencies via. (`poetry`)[https://python-poetry.org/docs/]
