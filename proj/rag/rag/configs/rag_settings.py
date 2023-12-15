@@ -48,9 +48,7 @@ class SettingsHolder(metaclass=SingletonMeta):
             raise SingletonCalledBeforeDefinedError()
 
 
-
-
-def load_rag_settings_objects(config_path=f'{src_path}/settings.toml') -> SettingsHolder:
+def load_settings_objects(config_path=f'{src_path}/settings.toml') -> SettingsHolder:
     '''
     Loads settings from `settings.toml`, related to api's etc. - called on `setup.py`
     '''
@@ -60,6 +58,7 @@ def load_rag_settings_objects(config_path=f'{src_path}/settings.toml') -> Settin
         pinecone_config = config['pinecone-embeddings']
         openai_config = config['openai-conversation']
         streamlit_config = config['streamlit-application']
+        print("Your settings are being loaded (for pinecone, openai etc.)")
         return SettingsHolder(
             Pinecone=PineconeSettings(**pinecone_config),
             OpenAi=OpenAiSettings(**openai_config),
@@ -74,3 +73,6 @@ def load_rag_settings_objects(config_path=f'{src_path}/settings.toml') -> Settin
         to the ExpectedConfigSection type in {__file__}, or removing any
         redundant sections
         ''')
+    
+if __name__ == "__main__":
+    load_settings_objects()

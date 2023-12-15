@@ -102,6 +102,10 @@
             - task triggers for retraining or enriching with user interactivity data (comments, ratings etc.)
             - model training and experimentation etc.
 
+- what about testing, cacheing outputs, and model experiment tracking etc.
+    - can tests work with llms, can we automate more of the setup, esp. the model selection for embeddings etc.
+    - is there value in storing example cached outputs of the model to be used for populating the app with templated responses etc.
+    - can we use something like `mlflow` to store the results of experiments, and maybe create template jupyter-nbs to do experiments in and store the results to the model-tracking library or data structure (for holding model name, eg. results, evaluation metrics etc.)
 
 # Questions
 - how did they get the transcriber to perform speaker identification and tag their sections of speech with their name
