@@ -7,9 +7,12 @@
 - [] Polish up pinecone setup step
     - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
     - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
+- [] OpenAI model accessing
+    - Perhaps we need to add a mechanism to list all models accesible by a user and use any of them, but ordered by preference somehow (maybe moving from `settings.py` to instead refer to a model ranking that we devise - but for the final app-ui, best to let user set the preferred model & to have tests in the bgd to ensure they can use it etc.)
 
 # Running the app locally
-`streamlit run rag/app.py`
+`streamlit run rag/app.py --server.headless true`
+    - then copy the server-ip and paste in your browser
 
 # Installation and initial setup (for devs)
 0. make sure you have (`python`)[https://www.python.org/downloads/] installed - the version must be greater than `3.8`

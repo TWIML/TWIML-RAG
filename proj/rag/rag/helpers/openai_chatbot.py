@@ -3,35 +3,63 @@ import pinecone
 import openai
 import streamlit as st
 import os
-from dotenv import load_dotenv
+
+from openai import OpenAI, NotFoundError
+from openai.types import Model
 
 # local imports
 from rag.configs.rag_settings import SettingsHolder
+
+# load .env keys
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PINECONE_KEY = os.getenv('PINECONE_KEY')
 
 # load settings for openai, pinecone etc.
 settings_objects = SettingsHolder()
 openai_conversation_settings = settings_objects.OpenAi
 pinecone_embeddings_settings = settings_objects.Pinecone
 
-# Load the dotenv file
-load_dotenv(override=True)
-
-openaiKey = os.getenv('OPENAI_API_KEY')
-pineconeKey = os.getenv('PINECONE_KEY')
-
 # pinecone
-pineconeEnvironment = os.getenv('PINECONE_ENVIRONMENT')
-pineconeIndexName = os.getenv('PINECONE_INDEX_NAME')
-pinecone.init(api_key=pineconeKey, environment=pineconeEnvironment)
-index = pinecone.Index(pineconeIndexName)
+PINECONE_ENV = os.getenv('PINECONE_ENVIRONMENT')
+PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
+pinecone.init(api_key=PINECONE_KEY, environment=PINECONE_ENV)
+PineconeIndex = pinecone.Index(PINECONE_INDEX_NAME)
 
 # open-ai
-openai.api_key = openaiKey
-vect_top_p = openai_conversation_settings.VECTOR_TOP_P
+openai_conversation_settings = settings_objects.OpenAi
+OPENAI_CHAT_MODEL = openai_conversation_settings.CHAT_MODEL
+OPENAI_CHAT_MODEL_ALTERNATIVE = openai_conversation_settings.ALTERNATIVE_CHAT_MODEL
+VECTOR_TOP_P = openai_conversation_settings.VECTOR_TOP_P
+OpenAiClient = OpenAI(api_key=OPENAI_API_KEY)
 
 # embeddings
-emb_model_name = pinecone_embeddings_settings.EMBEDDING_MODEL
-emb_model = SentenceTransformer(emb_model_name)
+EMBEDDING_MODEL_NAME = pinecone_embeddings_settings.EMBEDDING_MODEL
+EmbeddingModel = SentenceTransformer(EMBEDDING_MODEL_NAME)
+
+def get_usable_openai_model():
+    models_list = OpenAiClient.models.list()
+    accesible_model_names = []
+    print(f'\n\n{models_list}')
+    for m in models_list:
+        print(m.id)
+        accesible_model_names.append(m.id)
+
+    if OPENAI_CHAT_MODEL in accesible_model_names:
+        model_name = OPENAI_CHAT_MODEL
+    elif OPENAI_CHAT_MODEL_ALTERNATIVE in accesible_model_names:
+        model_name = OPENAI_CHAT_MODEL_ALTERNATIVE
+    else:
+        raise Exception(f'''
+        Your OPENAI API settings do not seem to have access to any of the two models in `settings.py`:
+            1. {OPENAI_CHAT_MODEL}
+            2. {OPENAI_CHAT_MODEL_ALTERNATIVE}
+        We might need to configure an alternative way of selecting a chat model from all available options...
+        Please see the README taskboard, or contact someone on the slack for implementation discussion
+        ''')
+    print(f'''
+    You will be using `{model_name}` as your openai chatbot model
+    ''')
+    return model_name
 
 """
 This method, takes an input, encodes it using a model, and queries an index to find the top three matches. 
@@ -40,8 +68,8 @@ This method, takes an input, encodes it using a model, and queries an index to f
  'full name: rest of the sentence' format. 
 """
 def find_match(input):
-    input_em = emb_model.encode(input).tolist()
-    result = index.query(input_em, top_k=8, includeMetadata=True)
+    input_em = EmbeddingModel.encode(input).tolist()
+    result = PineconeIndex.query(input_em, top_k=8, includeMetadata=True)
     # For inserting the speakers metadata to the front of each sentence
     # Returns the source (containing full name) and text (contents) of the JSON 
     # that we get from Pinecone in 'source: text' format
@@ -62,7 +90,7 @@ def query_refiner(conversation, query):
         messages=[{'role': 'user', 'content': prompt}],
         temperature=0.7,
         max_tokens=256,
-        top_p=vect_top_p,
+        top_p=VECTOR_TOP_P,
         frequency_penalty=0,
         presence_penalty=0
     )
