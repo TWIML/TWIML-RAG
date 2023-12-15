@@ -75,6 +75,6 @@ def load_settings_objects(config_path=f'{src_path}/settings.toml') -> SettingsHo
         to the ExpectedConfigSection type in {__file__}, or removing any
         redundant sections
         ''')
-    
+
 if __name__ == "__main__":
     load_settings_objects()

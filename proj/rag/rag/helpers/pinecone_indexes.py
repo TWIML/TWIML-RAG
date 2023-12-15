@@ -17,10 +17,10 @@ from langchain.embeddings import HuggingFaceEmbeddings, SentenceTransformerEmbed
 from rag.configs.rag_settings import SettingsHolder
 
 # getting vars (best to use a dataclass to ensure types & do exceptions etc.)
-input_directory = os.getenv('TRANSCRIPTS_DOWNLOAD_DIR')
-pineconeKey = os.getenv('PINECONE_KEY')
-pineconeEnvironment = os.getenv('PINECONE_ENVIRONMENT')
-pineconeIndexName = os.getenv('PINECONE_INDEX_NAME')
+TRANSCRIPTS_DIR = os.getenv('TRANSCRIPTS_DOWNLOAD_DIR')
+PINECONE_KEY = os.getenv('PINECONE_KEY')
+PINECONE_ENV = os.getenv('PINECONE_ENVIRONMENT')
+PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
 
 # getting settings (for pinecone embeddings etc. - hardcoded in `settings.py`)
 settings_objects = SettingsHolder()
@@ -60,37 +60,54 @@ def set_embedding_dimensions(embedder: Embeddings) -> int:
     else:
         return EMBEDDING_MODEL_DIMENSIONS
 
-def initialise_pinecone_index() -> IndexDescription:
-    embedder: Embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
-    dimensions: int = set_embedding_dimensions(embedder=embedder)
-
+def create_index_if_needed(embedder: Embeddings) -> IndexDescription:
     # initialize pinecone
     pinecone.init(
-        api_key=pineconeKey,
-        environment=pineconeEnvironment
+        api_key=PINECONE_KEY,
+        environment=PINECONE_ENV
     )
     # Create and configure index if doesn't already exist
-    if pineconeIndexName not in pinecone.list_indexes():
+    if PINECONE_INDEX_NAME not in pinecone.list_indexes():
+        dimensions: int = set_embedding_dimensions(embedder=embedder)
         pinecone.create_index(
-            name=pineconeIndexName, 
+            name=PINECONE_INDEX_NAME, 
             metric="cosine",
             dimension=dimensions
         )
-    index_metadata = pinecone.describe_index(pineconeIndexName)
+    index_metadata = pinecone.describe_index(PINECONE_INDEX_NAME)
     return index_metadata
 
 def run_pinecone_setup():
     print("Now setting up your pinecone index...")
+    
+    #################################
+    # DOCUMENT CHUNKING & PROCESSING
+    #################################
     # NOTE: you only want to do this if there are no new docs
     # so probably want to save a history of docs loaded/chunked
     # etc. or maybe even write the chunked docs to the transcripts
     # directory and load from there, and only process any that have
     # not already been done, that way you don't have to figure out a
     # way to avoid uploading already loaded ones to pinecone
-    documents, num_documents = load_docs(input_directory)
+    # NOTE: REPLACE/EDIT BELOW TWO CALLS
+    documents, num_documents = load_docs(TRANSCRIPTS_DIR)
     chunked_docs, num_doc_chunks = split_docs(documents)
-    index_metadata = initialise_pinecone_index()
+    #################################
+
+
+    embedder = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+    index_metadata = create_index_if_needed(embedder=embedder)
+    
+    
+    #################################
+    # PINECONE INDEX UPLOADING
+    #################################
     # NOTE: you need to upload the new docs to the pinecone index still
+    # but it should only be done if the doc is not already uploaded 
+    # NOTE: REPLACE BELOW LINE TO CONDITIONALLY LOAD ONLY
+    # index = Pinecone.from_documents(docs, embeddings, index_name=index_name)
+    #################################
+
     print(f"Your pinecone index metadata is as so: \n{index_metadata}")
     return index_metadata
 

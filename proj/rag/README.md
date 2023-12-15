@@ -1,27 +1,15 @@
+# Description & TOC
+*to be written*
+
 # Tasks & next-steps
 *next steps for extending the codebase & tasklists to select from (or add to for people to pick up work from, get ideas etc.) - to be written*
 
-1. Polish up pinecone setup step
+- [] Polish up pinecone setup step
     - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
     - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
 
-# How to contribute
-*how a dev can contribute to the project - to be written*
-
-# Model evaluation and comparison
-*model comparison tables, evaluation metrics and links - to be written*
-
-# Prompt ideas and discussion
-*standard prompts for different aspects and requirements of the rag and user interaction - to be written*
-
-# Background to RAG & LLM operation
-*explanations of how RAG & LLM's work and the libs, tools and apis used for them such as vector dbs, model apis, chat-gpt etc. - to be written*
-
-# App user features and interactivity
-*sections of the app, features for the user and how they might interact w. podcasts and learn ml etc. - to be written*
-
-# Codebase architecture and solution design
-*the folder structure, class interfaces etc. and how this folder/repo integrates with the overall solution (cloud services & pipeline) - to be written*
+# Running the app locally
+`streamlit run rag/app.py`
 
 # Installation and initial setup (for devs)
 0. make sure you have (`python`)[https://www.python.org/downloads/] installed - the version must be greater than `3.8`
@@ -55,3 +43,22 @@
         - if you need to add new keys to the process add them to the `RequiredEnvVars` type in `rag/rag/configs/env_vars.py` 
 
 4. getting your pinecone index set up (dimensions etc.)
+    - you must create a pinecone account and note the variables referring to it (key and project environment), the setup script should do the rest for you such as create an index if one under the name you entered does not exist etc.
+
+# App user features and interactivity
+*sections of the app, features for the user and how they might interact w. podcasts and learn ml etc. - to be written*
+
+# Codebase architecture and solution design
+*the folder structure, class interfaces etc. and how this folder/repo integrates with the overall solution (cloud services & pipeline) - to be written*
+
+# Model evaluation and comparison
+*model comparison tables, evaluation metrics and links - to be written*
+
+# Prompt ideas and discussion
+*standard prompts for different aspects and requirements of the rag and user interaction - to be written*
+
+# Background to RAG & LLM operation
+*explanations of how RAG & LLM's work and the libs, tools and apis used for them such as vector dbs, model apis, chat-gpt etc. - to be written*
+
+# How to contribute
+*how a dev can contribute to the project - to be written*
