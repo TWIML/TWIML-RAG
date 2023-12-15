@@ -108,3 +108,27 @@
 
 # Questions
 - how did they get the transcriber to perform speaker identification and tag their sections of speech with their name
+
+-----------------------------------------------------------------
+
+# Notes from meetings (building up an idea of the product)
+**(from 15/12/2023)**
+What they want features to be (roughly interpreted, from a partial informal discussion):
+    1. metadata about the podcast
+        - length, size, title, speakers
+    2. nlp analysis of content (comprehension, summarisation, linkage)
+        - graphing to associate podcasts, paragraph sections
+            - by topic etc.
+    3. search by topic and retrieve the episodes
+        - and it places you in the location of transcript (paragraph)
+            - where the relevant topic is being discussed
+    4. evaluation of prompts and chatbot responses
+        - utilising user-feedback? (active-learning style approach)
+            - linear predictors/training-data from thumbs-up/down
+            ...etc. to try and direct/tune responses served by
+            ...ranking prompts or tweaking them (maybe automatically
+            ...using llms to rephrase sentences, intent, import of
+            ...statements etc. with different synonyms, or perhaps
+            ...getting it to change the sentiment, or use terms w.
+            ...different wider/narrow connotations/semantics etc.)
+        - tools and applications to support
