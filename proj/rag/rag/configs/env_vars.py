@@ -62,7 +62,7 @@ def set_env_vars():
     required_vars = get_args(RequiredEnvVars)
     for var in required_vars:
         if var not in env_var_str:
-            key = input(f'Please enter your {var}: ')
+            key = input(f'Please enter your key or path for {var}: ')
             line = f'{var} = "{key.strip()}"\n'
             env_var_file.write(line)
     env_var_file.close()

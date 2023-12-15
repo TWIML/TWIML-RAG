@@ -1,6 +1,10 @@
 # Tasks & next-steps
 *next steps for extending the codebase & tasklists to select from (or add to for people to pick up work from, get ideas etc.) - to be written*
 
+1. Polish up pinecone setup step
+    - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
+    - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
+
 # How to contribute
 *how a dev can contribute to the project - to be written*
 

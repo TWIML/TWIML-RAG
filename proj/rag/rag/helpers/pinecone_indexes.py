@@ -18,7 +18,6 @@ from rag.configs.rag_settings import SettingsHolder
 
 # getting vars (best to use a dataclass to ensure types & do exceptions etc.)
 input_directory = os.getenv('TRANSCRIPTS_DOWNLOAD_DIR')
-
 pineconeKey = os.getenv('PINECONE_KEY')
 pineconeEnvironment = os.getenv('PINECONE_ENVIRONMENT')
 pineconeIndexName = os.getenv('PINECONE_INDEX_NAME')
@@ -42,7 +41,6 @@ def split_docs(documents, chunk_size=500, chunk_overlap=20) -> Tuple[List[Docume
     chunked_docs = text_splitter.split_documents(documents)
     num_doc_chunks = len(chunked_docs)
     return chunked_docs, num_doc_chunks
-
 
 def set_embedding_dimensions(embedder: Embeddings) -> int:
     query_result = embedder.embed_query("Hello world")
@@ -82,10 +80,18 @@ def initialise_pinecone_index() -> IndexDescription:
     return index_metadata
 
 def run_pinecone_setup():
+    print("Now setting up your pinecone index...")
+    # NOTE: you only want to do this if there are no new docs
+    # so probably want to save a history of docs loaded/chunked
+    # etc. or maybe even write the chunked docs to the transcripts
+    # directory and load from there, and only process any that have
+    # not already been done, that way you don't have to figure out a
+    # way to avoid uploading already loaded ones to pinecone
     documents, num_documents = load_docs(input_directory)
     chunked_docs, num_doc_chunks = split_docs(documents)
     index_metadata = initialise_pinecone_index()
-    print(index_metadata)
+    # NOTE: you need to upload the new docs to the pinecone index still
+    print(f"Your pinecone index metadata is as so: \n{index_metadata}")
     return index_metadata
 
 if __name__ == "__main__":

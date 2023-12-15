@@ -1,9 +1,8 @@
 # How to proceed (simple steps, keeping things as close to they are as of now & incrementally tweaking)
 1. setting up pinecone index (& conditional loading)
-2. moving stuff from setup.py to be imported from elsewhere
-3. making setup.py give printout feedback about credentials, settings & model stuff
-4. executing tests on the api's (pinecone, openai etc.) - to ensure connectivity
-5. finishing up README.md & check everything works
+...
+*. executing tests on the api's (pinecone, openai etc.) - to ensure connectivity
+*. finishing up README.md & check everything works
     - repeat till finished
 
 # Install instructions for `rag` folder

@@ -58,12 +58,14 @@ def load_settings_objects(config_path=f'{src_path}/settings.toml') -> SettingsHo
         pinecone_config = config['pinecone-embeddings']
         openai_config = config['openai-conversation']
         streamlit_config = config['streamlit-application']
-        print("Your settings are being loaded (for pinecone, openai etc.)")
-        return SettingsHolder(
+        settings_obj = SettingsHolder(
             Pinecone=PineconeSettings(**pinecone_config),
             OpenAi=OpenAiSettings(**openai_config),
             Streamlit=StreamlitSettings(**streamlit_config)
         )
+        print("Your settings have been loaded (for pinecone, openai etc.), they are as follows:")
+        print(f"{settings_obj}\n")
+        return settings_obj
     else:
         raise Exception(f'''
         It seems there is a mismatch between the sections expected from
