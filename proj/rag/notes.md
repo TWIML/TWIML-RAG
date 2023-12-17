@@ -1,5 +1,8 @@
 # To-Do
-**Basically link everything into the streamlit app UI (set-up, status of accounts, feedback on doc retrievals, interaction loop for user to store information etc.) & then focus your personal exploration efforts, i.e. non-devops-centric for others ease of using repo, on pertinent user features and additional auxiliary ml/ai eg. traditional nlp processing of responses, ranking documents and evaluating embedding experiments, graphing and linkage of documents (with some devopsy stuff such as extracting metadata for all docs, and also some ui devopsy stuff to enable people to create their own 'dbs' of sorts i.e. static file saves with columns, keys etc. to associate data about their prompts, or model experiments etc. - or maybe just simply allowing them to store pandas dfs. to a write location as pickle file and then have a streamlit section that ingests these and displays feedback etc.)**
+**Basically link everything into the streamlit app UI** 
+    - set-up, status of accounts, feedback on doc retrievals, interaction loop for user to store information etc.
+    - & then focus your personal exploration efforts, i.e. non-devops-centric for others ease of using repo, on pertinent user features and additional auxiliary ml/ai eg. traditional nlp processing of responses, ranking documents and evaluating embedding experiments, graphing and linkage of documents 
+        - with some additional devopsy stuff such as extracting metadata for all docs, and also some ui stuff to enable people to create their own 'dbs' of sorts to associate data about their prompts, or model experiments etc. - or maybe just simply allowing them to store pandas dfs. then have a streamlit section that ingests these and displays feedback etc. (add a 'meta_json' field for them to add any additional data, and then can run a pipeline to dynamically create new columns to align/aggregate the many different devs' dfs, so can always work off of one dashboard ... maybe this is a nosql style thing)
 
 0. Simplifying setup flow & settings sharing 
     - via. streamlit app and saved to and loaded from local file etc. (w. settings/keys printout on ui to verify, with option to modify)
@@ -7,12 +10,13 @@
     - use static json or something, & separate for each persons' clone, so put in .gitignore
     - + maybe instead of them having to download just use the google-drive api, and store the chunks there with the processed notes etc.
 2. Pinecone index - conditional loading
-3. Making streamlit such that every dev can have their own space and page(s)
-    - & simply import shared interfaces or common functionality if useful - and allow the component to be their experiment space (saves git merge-conflicts, and confusion as to what the page/code is intended to be trying out etc.)
-4. Tweaking streamlit UI to give more feedback and options for the dev 
-    eg. allow them to see which documents were retrieved from rag, also allow them to edit the prompts etc. on the fly
-    + create some ui & backend flow (+ static storage in git-local) to allow them to evaluate (give score or +/-) the response for both rag doc-retrieval & chat-model response separately, each associated with appropriate data (embedding model, chat model, query, etc. etc. + maybe a user comment for how to refine/improve the response, or what's wrong with the docs retrieved)
-    + in fact the more you let them do through an interface the more option their is to capture feedback and iteration (Eg. for choosing best embedding model for rag and writing results/metrics/comments about its suitability to a table in README or local git-storage,or perhaps some cloud-service or `ml-flow` etc. or maybe a local csv and you build a analytics dashboard off it in streamlit)
+3. App UI Features & Codebase Developer Flow (for experiments/trialling-app-features) etc.
+    i. Making streamlit such that every dev can have their own space and page(s) eg. `components` folder & wrappers on common stuff
+            - & simply import shared interfaces or common functionality if useful - and allow the component to be their experiment space (saves git merge-conflicts, and confusion as to what the page/code is intended to be trying out etc.)
+    ii. UI features for greater feedback and options for the dev to associate comments/markings etc.
+            eg. allow them to see which documents were retrieved from rag, also allow them to edit the prompts etc. on the fly
+            + create some ui & backend flow (+ static storage in git-local) to allow them to evaluate (give score or +/-) the response for both rag doc-retrieval & chat-model response separately, each associated with appropriate data (embedding model, chat model, query, etc. etc. + maybe a user comment for how to refine/improve the response, or what's wrong with the docs retrieved)
+            + in fact the more you let them do through an interface the more option their is to capture feedback and iteration (Eg. for choosing best embedding model for rag and writing results/metrics/comments about its suitability to a table in README or local git-storage,or perhaps some cloud-service or `ml-flow` etc. or maybe a local csv and you build a analytics dashboard off it in streamlit)
 
 # Bugs/Issues
 - Openai provide no way of querying the API to know for each model what endpoints/functionality it has, so you cant tell before hand if the model the user is going to select will work with the functionality you want (eg. conversational chat endpoint), so it might error if they choose the wrong one, the website has a table but it is not suitable for programmatic parsing (& would require web-crawling anyway, which they probably block)
