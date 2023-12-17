@@ -1,65 +1,34 @@
-# How to proceed (simple steps, keeping things as close to they are as of now & incrementally tweaking)
-1. setting up pinecone index (& conditional loading)
-...
-*. executing tests on the api's (pinecone, openai etc.) - to ensure connectivity
-*. finishing up README.md & check everything works
-    - repeat till finished
+# To-Do
+**Basically link everything into the streamlit app UI**
+0. Simplifying setup flow & settings sharing 
+    - via. streamlit app and saved to and loaded from local file etc. (w. settings/keys printout on ui to verify, with option to modify)
+1. Transcription files - conditional processing 
+    - use static json or something, & separate for each persons' clone, so put in .gitignore
+    - + maybe instead of them having to download just use the google-drive api, and store the chunks there with the processed notes etc.
+2. Pinecone index - conditional loading
+3. Making streamlit such that every dev can have their own space and page(s)
+    - & simply import shared interfaces or common functionality if useful - and allow the component to be their experiment space (saves git merge-conflicts, and confusion as to what the page/code is intended to be trying out etc.)
+4. Tweaking streamlit UI to give more feedback and options for the dev 
+    eg. allow them to see which documents were retrieved from rag, also allow them to edit the prompts etc. on the fly
+    + create some ui & backend flow (+ static storage in git-local) to allow them to evaluate (give score or +/-) the response for both rag doc-retrieval & chat-model response separately, each associated with appropriate data (embedding model, chat model, query, etc. etc. + maybe a user comment for how to refine/improve the response, or what's wrong with the docs retrieved)
+    + in fact the more you let them do through an interface the more option their is to capture feedback and iteration (Eg. for choosing best embedding model for rag and writing results/metrics/comments about its suitability to a table in README or local git-storage,or perhaps some cloud-service or `ml-flow` etc. or maybe a local csv and you build a analytics dashboard off it in streamlit)
 
-# Install instructions for `rag` folder
-- folder setup (& manual data download into it for now)
-- keys & env-vars (signing up to api's or asking @sam)
-- package dependencies (just for `rag` folder for now)
-- setup script (eg. `setup.py` for now till `main.py` is sorted - enabling them to run jupyter nbs cleanly)
-- running streamlit app
-- etc.
+# Bugs/Issues
+- Openai provide no way of querying the API to know for each model what endpoints/functionality it has, so you cant tell before hand if the model the user is going to select will work with the functionality you want (eg. conversational chat endpoint), so it might error if they choose the wrong one, the website has a table but it is not suitable for programmatic parsing (& would require web-crawling anyway, which they probably block)
 
-# CLI setup tool for `rag` folder
-- folder setup (also: put instructions for requesting google-drive access in README)
-    - input prompt: `You are currently in {pwd} directory, please state the directory to use for accessing the transcripts`
-    - helper prompt: `You must download the transcripts manually from google drive for now and place them in this folder`
-    - info prompt: `You have {x} number of files in the directory, here is a sample of {y} random files`
-    - notes: 
-        - only prompt if they have not already set a directory 
-        - store any directory they enter into `.env` and check settings from there
-        - store the files in the subfolder they state for the data eg. if they say dir `x` - (`x/data/transcripts/`)
-        ~ (maybe, after the rest) also set an `.env` var for the `nltk-data` directory
-            - write a function to pull the nltk-data there
-
-- keys & env-vars (also: put instructions for sign-ups in README)
-    - input prompt: `Would you like to set-up your env vars from the CLI (y/n)`
-        - if `y` then take them through the flow using `arparse` library and `input` prompts
-        - if `n` then print a message
-            - helper prompt: `You must set up your own `.env` file within the root dir of this folder - {pwd}, it must contain the following keys {list of env-var names expected}`
-    - helper prompt: `Your keys are now located in {pwd/.env}, they should not be pushed to git, please verify so from the .gitignore`
-    - notes:
-        - only prompt if they have not already got a .env file
-            - if they do have one with all necessary env-var:key pairs skip the prompts
-            - if they do but missing certain env-var:key pairs then prompt for only those
-                - keep a Literals data-structure to help with this (do the simplest thing)
-        - print their keys to screen for verification from them if they went through any CLI prompts to setup
-            - simple plain print for now, maybe hash out parts later (for some safety, in case demoing to someone)
-
-- package dependencies (also: put poetry install instructions in README)
-    - use poetry for package dependencies, just for the `rag` folder for now & discuss using it at module level
-    - state the commands to use for 
-        - accessing poetry env eg. `poetry shell` 
-        - adding new libs - `poetry add {pkg}`
-        - installing libsl - `poetry install`
-            - &... 
-            - mention benefits of tying to version, setting up linting config etc. 
-            - try to help w. troubleshooting info
-
-- try out streamlit app (just to check everything works)
-        
-
-# Extensions of CLI setup & DevOps-y stuff
-- writing `pytest` for api-connectivity before proceeding with confirming setup 
-    - eg. dummy api-call or access-test etc. w/ printout of account name, plan or so on
-- adding `mypy` type-hinting and solidifying interfaces, custom types (protocols), and linting etc. (via. the `pyproject.toml`)
-- polishing `pyproject.toml` for adding readme, repository, version tying, module etc. (docs)[https://python-poetry.org/docs/pyproject/]
-- relative file imports will be dangerous down the line, best to have single repo with main module entry point and name, which self installs in poetry, and is linked to a repo, and always reference from the src of repository
-    - if it needs any other repos written by devs working on the overall project then that can be added to `pyproject.toml` w. repo url and can be installed like that, can also link to a version of it only (using tags and version tagging for a specific commit - check github options)
-- setup github actions for tests, linting etc.
+# Extensions of Codebase Architecture (`rag`) & Devops/Setup
+- segragating `app` and `rag/src`
+- in src/
+    - writing class interfaces to wrap/abstract api-calls
+        - either ABC inherited consistency, or protocols
+- in app/
+    - creating `components` so each dev can easily add
+        - & extending streamlit to mutli-paged & auto generating the layout for components (pages etc.)
+- furnishings:
+    - writing `pytest` for things
+    - adding `mypy` type-hinting
+    - polishing `pyproject.toml` 
+    - setup github actions for tests, linting etc.
 
 -----------------------------------------
 
