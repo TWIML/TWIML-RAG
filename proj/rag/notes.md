@@ -1,5 +1,6 @@
 # To-Do
-**Basically link everything into the streamlit app UI**
+**Basically link everything into the streamlit app UI (set-up, status of accounts, feedback on doc retrievals, interaction loop for user to store information etc.) & then focus your personal exploration efforts, i.e. non-devops-centric for others ease of using repo, on pertinent user features and additional auxiliary ml/ai eg. traditional nlp processing of responses, ranking documents and evaluating embedding experiments, graphing and linkage of documents (with some devopsy stuff such as extracting metadata for all docs, and also some ui devopsy stuff to enable people to create their own 'dbs' of sorts i.e. static file saves with columns, keys etc. to associate data about their prompts, or model experiments etc. - or maybe just simply allowing them to store pandas dfs. to a write location as pickle file and then have a streamlit section that ingests these and displays feedback etc.)**
+
 0. Simplifying setup flow & settings sharing 
     - via. streamlit app and saved to and loaded from local file etc. (w. settings/keys printout on ui to verify, with option to modify)
 1. Transcription files - conditional processing 
