@@ -1,9 +1,0 @@
-.git
-.gitignore
-
-# Ignore generated/downloaded files
-**/*.pyc
-asr/*
-markdown/*
-rss/*
-podcasts/*
