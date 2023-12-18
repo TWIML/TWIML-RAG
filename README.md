@@ -7,8 +7,12 @@
 - [] Polish up pinecone setup step
     - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
     - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
-- [] OpenAI model accessing
-    - Perhaps we need to add a mechanism to list all models accesible by a user and use any of them, but ordered by preference somehow (maybe moving from `settings.py` to instead refer to a model ranking that we devise - but for the final app-ui, best to let user set the preferred model & to have tests in the bgd to ensure they can use it etc.)
+- [] Creating `app` functionality
+    - to enable components to be grouped and new pages to be easily added for prompt tuning & embedding explorations etc. - basically enabling extensibility and separate pages per dev/exploration to be picked up automatically by the interface
+- [] Transferring all functionality to the `streamlit` interfaced
+    - including keys, settings, file loading, api access etc. (everything except the `poetry` installation)
+- [] Might be worth moving from `load_dotenv` as `.env` files are not git tracked so the user may have to enter them in each time they pull, best to store the keys outside repo and use a class interface to store it at same relative location and pull in
+
 
 # Running the app locally
 `streamlit run rag/app.py --server.headless true`
@@ -41,9 +45,10 @@
 3. setting up your `.env` file with necessary keys for apis & cloud services
     - sign up to the openai api, or ask Sam for the shared projects' openai api key if there is one
     - sign up to pinecone, or ask for the shared projects' pinecone api key if there is one
-    - run `python rag/setup.py` from within the top-level `rag` folder i.e. where this README is
-        - enter your keys as prompted, and if you need to edit them change your local `.env`
-        - if you need to add new keys to the process add them to the `RequiredEnvVars` type in `rag/rag/configs/env_vars.py` 
+    - run `python rag/setup.py` or `streamlit run rag/app.py` from within the top-level `rag` folder i.e. where this README is
+        - enter your keys as prompted in the cli, and if you need to edit them change your local `.env`
+            - best to keep a copy of this as it is not tracked by git (same for the pkgs installed in `.venv`) so if you switch branch etc. or pull they will disappear I believe
+        - if you need to add new keys to the process add them to the `RequiredEnvVars` type in `rag/configs/env_vars.py` 
 
 4. getting your pinecone index set up (dimensions etc.)
     - you must create a pinecone account and note the variables referring to it (key and project environment), the setup script should do the rest for you such as create an index if one under the name you entered does not exist etc.
