@@ -4,14 +4,20 @@
 # Tasks & next-steps
 *next steps for extending the codebase & tasklists to select from (or add to for people to pick up work from, get ideas etc.) - to be written*
 
-- [] Polish up pinecone setup step (Uploading of documents to pinecone indexes is not currently being done by script - run `nbs/Pinecone_Indexing.ipynb` for now!)
+- [ ] Polish up pinecone setup step (Uploading of documents to pinecone indexes is not currently being done by script - run `nbs/Pinecone_Indexing.ipynb` for now!)
     - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
     - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
-- [] Creating `app` functionality
-    - to enable components to be grouped and new pages to be easily added for prompt tuning & embedding explorations etc. - basically enabling extensibility and separate pages per dev/exploration to be picked up automatically by the interface
-- [] Transferring all functionality to the `streamlit` interfaced
+- [ ] Transferring all setup, config functionality to UI from CLI
     - including keys, settings, file loading, api access etc. (everything except the `poetry` installation)
-- [] Might be worth moving from `load_dotenv` as `.env` files are not git tracked so the user may have to enter them in each time they pull, best to store the keys outside repo and use a class interface to store it at same relative location and pull in
+    - might be worth moving from `load_dotenv` as `.env` files are not git tracked so the user may have to enter them in each time they pull, best to store the keys outside repo and use a class interface to store it at same relative location and pull in
+- [ ] Streamlit UI components and extensible front-page (tabs for new/separate dev pages etc.)
+    - to enable components to be grouped and new pages to be easily added for prompt tuning & document embedding explorations etc. - basically enabling extensibility and separate pages per dev/exploration to be picked up automatically by the interface
+    - enable feedback mechanisms so people can rank/rate prompts for particular intents & create ways to organise and store prompts
+    - create model experimentation and tracking space (for embeddings in particular) - to evaluate retrieval
+- [ ] Codebase structure and architecture
+    - Class interfaces for streamlit app components/wrappers, for pinecone/openai api, for common langchain tasks etc. and esp. for interactions around codebase - passing keys, settings, responses, writing to files, collecting user input from ui and storing, cacheing, running access tests for api-accounts etc.
+          - & eventually for pulling in/connecting to transcription pipeline and gcp services (or other cloud)
+    - Then create diagram for codebase interfaces and the overall solution architecture (inc. transcription pipeline & infra etc.)
 
 
 # Running the app locally
