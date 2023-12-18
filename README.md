@@ -4,6 +4,8 @@
 # Tasks & next-steps
 *next steps for extending the codebase & tasklists to select from (or add to for people to pick up work from, get ideas etc.) - to be written*
 
+- [ ] Fix app reloading of everything on `app.py` after initial set-up
+    - At the moment the request for keys, and the loading/crunching of files etc. is in `rag/__init__.py` and still keeps getting refreshed by `rag/app.py` when running in streamlit, have to look into cacheing, or some other way to prevent (perhaps a tricksy conditional way to only run certain elements of setup if a flag has not been set etc. and the flag gets set on the basis of some cheaper operations like checking the folder is populated with docs not numbering more than what is stated in some static file with most recent number of doc records or similar)
 - [ ] Polish up pinecone setup step (Uploading of documents to pinecone indexes is not currently being done by script - run `nbs/Pinecone_Indexing.ipynb` for now!)
     - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
     - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
