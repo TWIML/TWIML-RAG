@@ -1,0 +1,1 @@
+*front-page/home-page: for the dev onboarding flow - to collect their keys, initialise/get their settings, and to trigger off any downloads of transcripts necessary, or the pinecone step etc. and to provide some info on their api accounts' accesses for pinecone, openai etc.*
