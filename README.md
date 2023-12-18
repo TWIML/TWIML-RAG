@@ -4,7 +4,7 @@
 # Tasks & next-steps
 *next steps for extending the codebase & tasklists to select from (or add to for people to pick up work from, get ideas etc.) - to be written*
 
-- [] Polish up pinecone setup step
+- [] Polish up pinecone setup step (Uploading of documents to pinecone indexes is not currently being done by script - run `nbs/Pinecone_Indexing.ipynb` for now!)
     - Don't process and chunk docs that have already been done (keep some static record, json etc. locally) & write chunks (w. some id or primary key) to the transcripts dir, and ingest from there, for now
     - Don't upload docs to pinecone index which are already there, maybe assign metadata to them with an id/hash of the podcast name and pull down that list and only load docs that are not in it (maybe there's a nicer way via. langchain api)
 - [] Creating `app` functionality
@@ -24,7 +24,7 @@
 1. package dependencies via. (`poetry`)[https://python-poetry.org/docs/]
     - install via. instructions on website, i used `curl -sSL https://install.python-poetry.org | python3 -`
         - follow the install page for any troubleshooting
-    - inside this root folder `rag` execute `poetry install`
+    - inside this root w. the `pyproject.toml` execute `poetry install`
         - it will install the pkgs from the `pyproject.toml`
         - you can add new packages via. `poetry add {pkg}`
     - enter your virtual env by executing `poetry shell`
@@ -39,8 +39,9 @@
             - you can exit your virtual env using `deactivate`
 
 2. downloading the transcription data from google-drive
-    - download the data from https://drive.google.com/drive/folders/0AL0-_RLA7pqDUk9PVA - if you don't have access ask Sam or Darin
+    - download the data from (GOOGLE-DRIVE)[https://drive.google.com/drive/folders/0AL0-_RLA7pqDUk9PVA] - if you don't have access ask Sam or Darin
     - create a folder outside of the `TWIML-RAG` repo (so your data download doesn't get uploaded to github when pushing) & remember the full path of the folder with the data in it eg. `/home/<username>/twiml-transcripts`
+    - place your downloaded data in this folder and copy the path to enter later
 
 3. setting up your `.env` file with necessary keys for apis & cloud services
     - sign up to the openai api, or ask Sam for the shared projects' openai api key if there is one
@@ -52,6 +53,7 @@
 
 4. getting your pinecone index set up (dimensions etc.)
     - you must create a pinecone account and note the variables referring to it (key and project environment), the setup script should do the rest for you such as create an index if one under the name you entered does not exist etc.
+    - IT DOES NOT CURRENTLY DO THE LOADING - TBD
 
 # App user features and interactivity
 *sections of the app, features for the user and how they might interact w. podcasts and learn ml etc. - to be written*
