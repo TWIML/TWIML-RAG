@@ -23,7 +23,7 @@ flowchart TB
         B --> D[FUSION]
         C --> D
         D --> E[(fa:fa-file Transcription Data Files)]
-        E --> F[Pinecone Index]
+        E --> F[Index]
     end
     subgraph "Chatbot using Augmented Generation"
         direction LR
