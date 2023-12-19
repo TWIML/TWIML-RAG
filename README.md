@@ -27,9 +27,9 @@
     - then copy the server-ip and paste in your browser
 
 # Installation and initial setup (for devs)
-0. make sure you have (`python`)[https://www.python.org/downloads/] installed - the version must be greater than `3.8`
+0. make sure you have [`python`](https://www.python.org/downloads/) installed - the version must be greater than `3.8`
 
-1. package dependencies via. (`poetry`)[https://python-poetry.org/docs/]
+1. package dependencies via. [`poetry`](https://python-poetry.org/docs/)
     - install via. instructions on website, i used `curl -sSL https://install.python-poetry.org | python3 -`
         - follow the install page for any troubleshooting
     - inside this root w. the `pyproject.toml` execute `poetry install`
@@ -37,7 +37,7 @@
         - you can add new packages via. `poetry add {pkg}`
     - enter your virtual env by executing `poetry shell`
         - this has all your dependencies available
-        - you may need to play around to associate this with your IDE (such as (`VSCode`)[https://code.visualstudio.com/docs/python/environments#_working-with-python-interpreters])
+        - you may need to play around to associate this with your IDE (such as [`VSCode`](https://code.visualstudio.com/docs/python/environments#_working-with-python-interpreters))
         - you can find the path to your virtual env interpreter using `poetry env list --full-path`
     - after initial setup:
         - whenever you pull from github execute `poetry install` or `poetry update` in case the `pyproject.toml` has changed
@@ -47,7 +47,7 @@
             - you can exit your virtual env using `deactivate`
 
 2. downloading the transcription data from google-drive
-    - download the data from (GOOGLE-DRIVE)[https://drive.google.com/drive/folders/0AL0-_RLA7pqDUk9PVA] - if you don't have access ask Sam or Darin
+    - download the data from [GOOGLE-DRIVE](https://drive.google.com/drive/folders/0AL0-_RLA7pqDUk9PVA) - if you don't have access ask Sam or Darin
     - create a folder outside of the `TWIML-RAG` repo (so your data download doesn't get uploaded to github when pushing) & remember the full path of the folder with the data in it eg. `/home/<username>/twiml-transcripts`
     - place your downloaded data in this folder and copy the path to enter later
 
