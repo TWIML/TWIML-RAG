@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question and Answer Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            width: 80%;
+            margin: auto;
+        }
+        select, input[type="number"], button, textarea {
+            margin: 10px 0;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="container">
+    Source:
+    <select id="source">
+        <option value="twiml_ai_podcast_summary">Abstract</option>
+        <option value="twiml_ai_podcast">Transcript</option>
+    </select>
+    <br>
+    Results:
+    <input type="number" id="num" min="1" placeholder="Number" value="10">
+
+    <hr>
+
+    <textarea id="question" placeholder="Type your question here..." style="width: 100%; height: 100px;">
+
+    </textarea>
+    <button onclick="testAzureFun()">Ask</button>
+
+    <hr>
+
+    <textarea id="answer" placeholder="Answer will appear here..." readonly style="width: 100%; height: 500px;">
+
+    </textarea>
+</div>
+
+<script>
+    function generateAnswer() {
+        var source = document.getElementById('source').value;
+        var num = document.getElementById('num').value;
+        var question = document.getElementById('question').value;
+
+        // This is where you would add the logic to generate an answer
+        // For now, we'll just echo the inputs
+        var answer = `Source: ${source}, Number: ${num}, Question: ${question}`;
+
+        document.getElementById('answer').value = answer;
+    }
+
+    function testAzureFun() {
+        var source = document.getElementById('source').value;
+        var num = document.getElementById('num').value;
+        var question = document.getElementById('question').value;
+
+        // const website = 'https://embedfn.azurewebsites.net/';
+        const website = 'http://localhost:7071/'
+        const url = website + '/api/embedfn?question=' + question +
+              '&n=' + num + '&collection=' + source
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }                
+                return response.text();
+        })
+        .then(data => {
+            document.getElementById('answer').value = data;
+            console.log(data); // Process your data here
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+</script>
+</body>
+</html>
