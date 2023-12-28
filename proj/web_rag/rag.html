@@ -1,0 +1,126 @@
+<!-- From https://github.com/dmitrizzle/chat-bubble-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My chat-bubble Project</title>
+
+    <!-- stylesheets are conveniently separated into components -->
+    <link rel="stylesheet" media="all" href="./css/setup.css"/>
+    <link rel="stylesheet" media="all" href="./css/says.css"/>
+    <link rel="stylesheet" media="all" href="./css/reply.css"/>
+    <link rel="stylesheet" media="all" href="./css/typing.css"/>
+    <link rel="stylesheet" media="all" href="./css/input.css"/>
+    <style>
+        body {
+            background: #dcdde0;
+        }
+
+        .bubble-container {
+            height: 100vh;
+        }
+
+        .bubble-container .input-wrap textarea {
+            margin: 0;
+            width: calc(100% - 30px);
+        }
+    </style>
+</head>
+<body>
+<!-- container element for chat window -->
+<div id="chat"></div>
+
+<!-- import the JavaScript file -->
+<script src="./js/Bubbles.js"></script>
+<script>
+    async function answer_question(question) {
+        // website = 'https://embedfn.azurewebsites.net/'
+        website = 'http://localhost:7071/'
+        url = website + 'api/ragfn?question=' + question
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            const data = await response.text();
+            // console.log(data);
+            return data;
+        } catch (error) {
+            console.log(error);
+            return 'An error occurred: ' + error.message;
+        }
+    }
+
+    /************************************************************************/
+    /************************ SAMPLE IMPLEMENTATION *************************/
+    /************************************************************************/
+
+    // initialize by constructing a named function...
+    const chatWindow = new Bubbles(
+        document.getElementById("chat"), // ...passing HTML container element...
+        "chatWindow", // ...and name of the function as a parameter
+        {
+            inputCallbackFn: async function (o) {
+                let reply_tag = 'rag-reply-0'
+                if (o.standingAnswer !== 'ice') {
+                    // Get the number at the end of the reply tag
+                    let reply_tag_num = parseInt(o.standingAnswer.split('-')[2])
+                    // Increment the number
+                    reply_tag = 'rag-reply-' + (reply_tag_num + 1)
+                }
+
+                // Iterate through the list of replies and the reply will be the all the answers combined
+                // let reply = ''
+                // for (let conv in o.convo) {
+                //     if (conv !=='ice') {
+                //         reply += o.convo[conv].says + '\n'
+                //     }
+                // }
+                // reply += o.input
+
+
+                let reply = await answer_question(o.input)
+
+                console.log('Reply is: ' + reply)
+                // answer_question(o.input)
+                //     .then(response => {
+                //             reply = response;
+                //         }
+                //     ).catch(error => {
+                //     reply = 'An error occurred: ' + error.message;
+                // })
+
+                chatWindow.talk(
+                    {
+                        [String(reply_tag)]: {
+                            says: [
+                                reply,
+                            ]
+                        }
+                    },
+                    reply_tag
+                )
+            }
+        });
+
+    // `.talk()` will get your bot to begin the conversation
+    chatWindow.talk(
+        // pass your JSON/JavaScript object to `.talk()` function where
+        // you define how the conversation between the bot and user will go
+        {
+            // "ice" (as in "breaking the ice") is a required conversation object
+            // that maps the first thing the bot will say to the user
+            ice: {
+                // "says" defines an array of sequential bubbles
+                // that the bot will produce
+                says: ["Hi. I'm the TWIML bot. What can I help you with?"],
+            }, // end required "ice" conversation object
+
+        } // end conversation object
+    );
+</script>
+
+</body>
+</html>
