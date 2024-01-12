@@ -10,5 +10,8 @@ proj/speech_to_text/asr/*
 proj/speech_to_text/markdown/*
 proj/speech_to_text/rss/*
 proj/speech_to_text/podcasts/*
+proj/speech_to_text/embeddings
+proj/speech_to_text/info
 **/__pycache__/
 **/*.pyc
+.idea
