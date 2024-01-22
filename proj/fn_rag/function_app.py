@@ -105,7 +105,7 @@ def embedfn(req: func.HttpRequest) -> func.HttpResponse:
 
 import os
 from langchain.prompts import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import LLMChain, StuffDocumentsChain
 from langchain.schema import Document, StrOutputParser
 from langchain.prompts import PromptTemplate, ChatPromptTemplate

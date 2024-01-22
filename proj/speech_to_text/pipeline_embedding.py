@@ -449,12 +449,12 @@ if __name__ == '__main__':
         get_rss_feed(RSS_URL, RSS_FILENAME)
 
     # Generate the info data from the RSS feed
-    make_episode_data_flag = False
+    make_episode_data_flag = True #False
     if make_episode_data_flag:
         make_episode_data()
 
     # Generate the dialogs data for embeddings
-    make_dialogs_flag = False
+    make_dialogs_flag = True #False
     if make_dialogs_flag:
         make_embedding_file(force_create=True, word_size=250)
 
@@ -467,7 +467,7 @@ if __name__ == '__main__':
     }
 
     # Create the embeddings for the summary text
-    run_embedding_summary_flag = False
+    run_embedding_summary_flag = True #False
     if run_embedding_summary_flag:
         run_embedding_summary()
         query_embedding(questions, 'twiml_ai_podcast_summary')
