@@ -17,20 +17,30 @@ We will use the BGE embeddings to create the embeddings and store them in qdrant
 Basically just do the following (in a new directory where you want to store the qdrant data) and qdrant should be running. The run command will create and populate the 'qdrant_storage' directory automatically.
    ```
    docker pull qdrant/qdrant
-   docker run -p 6333:6333 -p 6334:6334  -v $(pwd)/qdrant_storage:/qdrant/storage:z     qdrant/qdrant
+   docker run -p 6333:6333 -p 6334:6334 -v ${PWD}/qdrant_storage:/qdrant/storage:z qdrant/qdrant
+
    ```
    You can access the dashboard on the local qdrant on http://localhost:6333/dashboard
 
-1. Install the pip packages on `requirements_embeddings.txt`. It is BGE and Qdrant-related packages. You can create a new python package or if you are running `speach_to_text` locally, you can just install the requirements on the same environment.
+2. Install the pip packages on `requirements_embeddings.txt`. It is BGE and Qdrant-related packages. You can create a new python package or if you are running `speach_to_text` locally, you can just install the requirements on the same environment.
 
-1. Run `pipeline_embeddins.py` (in the speach_to_text application/dir). You must download the `asr` folder for the speaker information and the `transcripts` folder for the episode transcripts. Download these folders from the 'output transcripts' directory on the shared TWIML-RAG Google Drive (request access via the TWIML slack community twiml-rag channel. (Note that this will be very slow on CPU only machine. GPU took about 5 minutes but CPU only took over 3 hours).
+3. Create a config.py file, but can be left blank since we are using local versions of qdrant and embaas.
 
-This will create
+```python
+QDRANT_API_KEY = ""
+
+QDRANT_URL =  "" 
+```
+
+4. Run `pipeline_embedding.py` (in the speach_to_text application/dir). You must download the `asr` folder for the speaker information and the `transcripts` folder for the episode transcripts and save them in the `speach_to_text` folder. Download these folders from the 'output transcripts' directory on the shared TWIML-RAG Google Drive (request access via the TWIML slack community twiml-rag channel). (Note that this will be very slow on CPU only machine. GPU took about 5 minutes but CPU only took over 3 hours).
+
+This will create:
 1. `info` folder with information about the episodes
 2. `embeddings` folder with the dialogs cut up with 250 word size patches
-3. Create embeddings using BGE and save to qdrant
-   1.   Summary information from the info
-   2. Patches of dialogs from the transcripts
+3. `rss`flder with the RSS feed twiml_rss.xml
+4.  `qdrant_storage` folder with embeddings using BGE and save to qdrant
+   1. Summary information from the transcripts (twiml_ai_podcast_summary)
+   2. Patches of dialogs from the transcripts (twiml_ai_podcast)
 
 ### Azure Functions
 
