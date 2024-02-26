@@ -5,13 +5,8 @@ rag/.env
 data_output
 secrets.toml
 config.py
-proj/speech_to_text/credentials.json
-proj/speech_to_text/asr/*
-proj/speech_to_text/markdown/*
-proj/speech_to_text/rss/*
-proj/speech_to_text/podcasts/*
-proj/speech_to_text/embeddings
-proj/speech_to_text/info
+proj/data/*
+**/qdrant/*
 **/__pycache__/
 **/*.pyc
 .idea
