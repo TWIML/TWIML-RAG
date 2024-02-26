@@ -5,6 +5,7 @@ from google_cloud_auth import gcloud_auth
 from google_cloud_utils import get_rag_drive_id, get_drive_folder_id, drive_query
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from common.files import get_data_dirpath, get_data_filepath
 
 def main():
     creds = gcloud_auth()
@@ -34,9 +35,9 @@ def main():
 
     # Iterate through the files in the transcripts folder locally and upload them to the transcripts folder in
     # Google Drive
-    for filename in os.listdir('transcripts'):
+    for filename in os.listdir(get_data_dirpath('transcripts')):
         # Get the created time of the filename
-        filename_full = os.path.join('transcripts', filename)
+        filename_full = get_data_filepath('transcripts', filename)
         created_time = os.path.getctime(filename_full)
 
         # Change the modified time to a string format of '2023-09-03T16:58:42.000Z'

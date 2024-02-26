@@ -9,6 +9,7 @@ from speaker_identification import run_llm_speaker_identification
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
 from utils import check_required_dirs
 from google_cloud_utils import get_secret, upload_files_to_drive
+from common.files import get_data_dirpath, get_data_filepath
 
 HUGGING_FACE_API_KEY = get_secret('HUGGING_FACE_API_KEY')
 
@@ -52,20 +53,22 @@ def process_episode(episode):
     file_prefix = episode['episode']
 
     # Download the mp3 file if it does not exist into the podcasts folder
-    mp3_filename = os.path.join('podcasts', file_prefix + '.mp3')
+    mp3_filename = get_data_filepath('podcasts', file_prefix + '.mp3')
     if not os.path.exists(mp3_filename):
+        if not os.path.exists(get_data_dirpath('podcasts')):
+            os.makedirs(get_data_dirpath('podcasts'))
         print(f'Downloading {episode["episode"]}...')
         download_mp3(episode['url'], mp3_filename)
     audio_filename = mp3_filename
 
     # Set up the filename that we will use to save the text from the asr
-    whisper_json_filename = os.path.join('asr', file_prefix + '.whisper.json')
-    pyannote_json_filename = os.path.join('asr', file_prefix + '.pyannote.json')
-    pyannote_whisper_json_filename = os.path.join('asr', file_prefix + '.pyannote_whisper.json')
-    output_json_file = os.path.join('transcripts', file_prefix + '.output.json')
-    corrected_json_file = os.path.join('transcripts', file_prefix + '.corrected.json')
-    markdown_output = os.path.join('markdown', file_prefix + '.md')
-    speakers_json_filename = os.path.join('asr', file_prefix + '.speakers.json')
+    whisper_json_filename = get_data_filepath('asr', file_prefix + '.whisper.json')
+    pyannote_json_filename = get_data_filepath('asr', file_prefix + '.pyannote.json')
+    pyannote_whisper_json_filename = get_data_filepath('asr', file_prefix + '.pyannote_whisper.json')
+    output_json_file = get_data_filepath('transcripts', file_prefix + '.output.json')
+    corrected_json_file = get_data_filepath('transcripts', file_prefix + '.corrected.json')
+    markdown_output = get_data_filepath('markdown', file_prefix + '.md')
+    speakers_json_filename = get_data_filepath('asr', file_prefix + '.speakers.json')
 
     initial_prompt = 'TWIML with Sam Charrington. ' + episode['title'] + ' ' + episode['description']
 
@@ -109,11 +112,11 @@ def run_pipeline(start, end=None):
     check_required_dirs()
 
     # Download the RSS feed if the file does not exist, or if we have -1 as the start
-    if not os.path.exists(RSS_FILENAME) or start == -1:
-        get_rss_feed(RSS_URL, RSS_FILENAME)
+    if not os.path.exists(get_data_filepath('rss', RSS_FILENAME)) or start == -1:
+        get_rss_feed(RSS_URL, get_data_filepath('rss', RSS_FILENAME))
 
     # Get the podcast data as a list of dictionaries
-    podcast_data = get_rss_feed_data(RSS_FILENAME)
+    podcast_data = get_rss_feed_data(get_data_filepath('rss', RSS_FILENAME))
 
     # If start is -1, process all the episodes
     if start == -1:

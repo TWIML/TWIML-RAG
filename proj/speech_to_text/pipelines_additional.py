@@ -4,6 +4,7 @@ import whisper_pyannote_fusion
 
 from google_cloud_utils import get_secret
 from pipeline import download_mp3, add_speaker_identification
+from common.files import get_data_dirpath, get_data_filepath
 
 HUGGING_FACE_API_KEY = get_secret('HUGGING_FACE_API_KEY')
 
@@ -17,24 +18,26 @@ def process_episode_whisper_x(episode):
     file_prefix = episode['episode']
 
     # Download the mp3 file if it does not exist into the podcasts folder
-    mp3_filename = os.path.join('podcasts', file_prefix + '.mp3')
+    mp3_filename = get_data_filepath('podcasts', file_prefix + '.mp3')
     if not os.path.exists(mp3_filename):
+        if not os.path.exists(get_data_dirpath('podcasts')):
+            os.makedirs(get_data_dirpath('podcasts'))
         print(f'Downloading {episode["episode"]}...')
         download_mp3(episode['url'], mp3_filename)
     audio_filename = mp3_filename
 
     # Set up the filename that we will use to save the text from the asr
-    whisper_json_filename = os.path.join('asr', file_prefix + '.whisper.json')
-    pyannote_json_filename = os.path.join('asr', file_prefix + '.pyannote.json')
-    pyannote_whisper_json_filename = os.path.join('asr', file_prefix + '.pyannote_whisper.json')
-    whisperx_alignment_json_filename = os.path.join('asr', file_prefix + '.whisperx.json')
-    speakers_json_filename = os.path.join('asr', file_prefix + '.speakers.json')
+    whisper_json_filename = get_data_filepath('asr', file_prefix + '.whisper.json')
+    pyannote_json_filename = get_data_filepath('asr', file_prefix + '.pyannote.json')
+    pyannote_whisper_json_filename = get_data_filepath('asr', file_prefix + '.pyannote_whisper.json')
+    whisperx_alignment_json_filename = get_data_filepath('asr', file_prefix + '.whisperx.json')
+    speakers_json_filename = get_data_filepath('asr', file_prefix + '.speakers.json')
 
     initial_prompt = 'TWIML with Sam Charrington. ' + episode['title'] + ' ' + episode['description']
 
-    output2_json_file = os.path.join('transcripts', file_prefix + '.output2.json')
-    markdown1_output = os.path.join('markdown', file_prefix + '.1.md')
-
+    output2_json_file = get_data_filepath('transcripts', file_prefix + '.output2.json')
+    markdown1_output = get_data_filepath('markdown', file_prefix + '.1.md')
+    
     try:
         whisper_pyannote_fusion.whisper_pyannote_fusion(audio_filename, 'whisperx_align_pyannote',
                                                         whisper_json_file=whisper_json_filename,

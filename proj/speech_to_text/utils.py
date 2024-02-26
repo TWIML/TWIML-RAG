@@ -1,4 +1,5 @@
 import os
+from common.files import get_data_dirpath
 
 
 def check_required_dirs():
@@ -8,8 +9,8 @@ def check_required_dirs():
     """
     required_dirs = ['podcasts', 'asr', 'transcripts', 'markdown', 'rss']
     for required_dir in required_dirs:
-        if not os.path.exists(required_dir):
-            os.mkdir(required_dir)
+        if not os.path.exists(get_data_dirpath(required_dir)):
+            os.mkdir(get_data_dirpath(required_dir))
 
 
 if __name__ == '__main__':
