@@ -1,12 +1,13 @@
 import os
 import json
+from common.files import get_data_dirpath, get_data_filepath
 
 
 def make_episode_info(episode_info_json_filename):
     # Iterate through all the files in the info folder and create a dictionary by the episode number
 
     # Get all the files in the info directory
-    info_files = os.listdir('info')
+    info_files = os.listdir(get_data_dirpath('info'))
 
     # Sort the files by the episode number
     info_files = sorted(info_files)
@@ -15,7 +16,7 @@ def make_episode_info(episode_info_json_filename):
     info_dict = {}
     for file in info_files:
         # Read the json file
-        with open(os.path.join('info', file), 'r') as f:
+        with open(get_data_filepath('info', file), 'r') as f:
             info = json.load(f)
 
         # Get the episode number

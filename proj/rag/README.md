@@ -1,3 +1,6 @@
+> [!NOTE]
+> This folder is deprecated and not part of the main project, but it contains notebooks that you might find useful in understanding high-level RAG concepts. The actual project has already diverged significantly from the code found here, and it is not guaranteed to work or be correct.
+
 Some basic set of rules for the RAG part:
 
 1. Use `requirements.txt` to install the required packages via pip.

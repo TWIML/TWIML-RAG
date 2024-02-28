@@ -1,9 +1,10 @@
 import json
 import os
 import requests
-import re
-import unicodedata
 import time
+from tqdm import tqdm
+
+from common.files import sanitize_filename, get_data_filepath, get_data_dirpath, tqdm_file_list
 
 from FlagEmbedding import FlagModel
 
@@ -11,33 +12,8 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
 
-from config import QDRANT_URL, QDRANT_API_KEY
-from proj.speech_to_text.rss_process import get_rss_feed_data, RSS_FILENAME, get_rss_feed, RSS_URL
-
-
-def sanitize_filename(filename):
-    """
-    Sanitize the filename to remove any characters that are not allowed in filenames
-    @param filename:  Filename to sanitize
-    @return: Sanitized filename
-    """
-    # Normalize unicode characters
-    filename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('ASCII')
-
-    # Replace invalid characters with an underscore
-    filename = re.sub(r'[\/:*?"<>|]', '_', filename)
-
-    # Truncate to 255 characters to handle length limits
-    filename = filename[:255]
-
-    # Avoid reserved filenames in Windows
-    reserved_names = {"CON", "PRN", "AUX", "NUL"} | {f"COM{i}" for i in range(1, 10)} | {f"LPT{i}" for i in
-                                                                                         range(1, 10)}
-    if filename in reserved_names:
-        filename = "_" + filename
-
-    return filename
-
+from .config import QDRANT_URL, QDRANT_API_KEY
+from speech_to_text.rss_process import get_rss_feed_data, RSS_FILENAME, get_rss_feed, RSS_URL
 
 def get_redirect_url(url):
     """
@@ -97,13 +73,13 @@ def make_episode_data():
     podcast_data = get_rss_feed_data(RSS_FILENAME)
 
     # Iterate through the podcast data and fix the description and the show notes url
-    for episode in podcast_data:
+    for episode in tqdm(podcast_data, desc="Making Episode Data"):
         # Name of the json file that has the info
         json_filename = f'{episode}.info.json'
 
         # Remove any characters that are illegal in filenames
         json_filename = sanitize_filename(json_filename)
-        json_filename = os.path.join('info', json_filename)
+        json_filename = get_data_filepath('info', json_filename)
 
         # Check if the file exists. If it doesn't, then process and create the file
         if not os.path.exists(json_filename):
@@ -138,8 +114,8 @@ def get_episode_text(id, word_size):
     # Format is speaker: text speaker: text
 
     # Get the transcript file for the episode and check if it exists or not
-    transcript_filename = f'transcripts/{id}.corrected.json'
-    speakers_filename = f'asr/{id}.speakers.json'
+    transcript_filename = get_data_filepath('transcripts', f'{id}.corrected.json')
+    speakers_filename = get_data_filepath('asr', f'{id}.speakers.json')
 
     if not os.path.exists(transcript_filename):
         return None
@@ -197,7 +173,7 @@ def make_embedding(episode_data, force_create, word_size):
     id = episode_data['episode']
 
     # Name of the json file that we will store the embedding in
-    json_filename = f'embeddings/{id}.json'
+    json_filename = get_data_filepath('embeddings', f'{id}.json')
 
     # Check if the file exists and if it does and we are not forcing the creation of the file, then skip
     if os.path.exists(json_filename) and not force_create:
@@ -245,7 +221,7 @@ def make_embedding_file(force_create, word_size):
 
     # Iterate through the episodes
     episode_list = []
-    for episode in episodes:
+    for episode in tqdm(episodes,desc="Making Embedding Files"):
         # Process the episode
         episode_data = episodes[episode]
 
@@ -316,9 +292,9 @@ def run_embedding_summary():
     points = []
 
     # Get all the files in the pinecone directory
-    for i, filename in enumerate(os.listdir('info')):
+    for i, filename in tqdm_file_list(get_data_dirpath('info'), desc="Building Embedding Summary"):
         # Get the full filename
-        json_filename = os.path.join('info', filename)
+        json_filename = get_data_filepath('info', filename)
 
         with open(json_filename, 'r') as f:
             podcast_data = json.load(f)
@@ -343,7 +319,7 @@ def run_embedding_summary():
         )
 
     end_time = time.time()
-    print(f"Time taken: {end_time - start_time}")
+    # print(f"Time taken: {end_time - start_time}")
 
 
 def run_embedding():
@@ -370,9 +346,9 @@ def run_embedding():
     points = []
 
     # Get all the files in the pinecone directory
-    for i, filename in enumerate(os.listdir('embeddings')):
+    for i, filename in tqdm_file_list(get_data_dirpath('embeddings'), desc="Building Embedding:  Files", position=0):
         # Get the full filename
-        filename_full = os.path.join('embeddings', filename)
+        filename_full = get_data_filepath('embeddings', filename)
         # print(filename_full)
 
         # Get the text from the file
@@ -383,12 +359,12 @@ def run_embedding():
         episode_name = filename.split('.')[0]
         json_filename = f'{episode_name}.info.json'
         json_filename = sanitize_filename(json_filename)
-        json_filename = os.path.join('info', json_filename)
+        json_filename = get_data_filepath('info', json_filename)
         with open(json_filename, 'r') as f:
             podcast_data = json.load(f)
 
         # Get the embedding for each of the text portions in the file
-        for ti, text_portion in enumerate(text):
+        for ti, text_portion in tqdm(enumerate(text), total=len(text), desc="Building Embedding: Points", position=1, leave=False):
             # We are going to embed the text portion with the title
             text_data = podcast_data['title'] + '\n' + text_portion
 
@@ -410,10 +386,10 @@ def run_embedding():
                 wait=True,
                 points=[point],
             )
-            print(id, operation_info)
+            # print(id, operation_info) # Status should always be completed since we're waiting for it
 
     end_time = time.time()
-    print(f"Time taken: {end_time - start_time}")
+    # print(f"Time taken: {end_time - start_time}")
 
 
 def query_embedding(questions, collection_name):
@@ -441,12 +417,12 @@ if __name__ == '__main__':
     # Make sure we have the directories rss, info and embeddings
     folders = ['rss', 'info', 'embeddings']
     for folder in folders:
-        if not os.path.exists(folder):
-            os.mkdir(folder)
-
+        if not os.path.exists(get_data_dirpath(folder)):
+            os.mkdir(get_data_dirpath(folder))
+    
     # Check that the rss file is there
-    if not os.path.exists(RSS_FILENAME):
-        get_rss_feed(RSS_URL, RSS_FILENAME)
+    if not os.path.exists(get_data_filepath('rss', RSS_FILENAME)):
+        get_rss_feed(RSS_URL, get_data_filepath('rss', RSS_FILENAME))
 
     # Generate the info data from the RSS feed
     make_episode_data_flag = True #False

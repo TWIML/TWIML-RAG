@@ -4,12 +4,13 @@ from google_cloud_utils import get_latest_episode_from_drive
 from utils import check_required_dirs
 from pipeline import run_pipeline
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
+from common.files import get_data_filepath
 
 # Get latest episode number from RSS feed
 
 def get_latest_ep_from_rss():
     # Download the latest RSS feed
-    get_rss_feed(RSS_URL, RSS_FILENAME)
+    get_rss_feed(RSS_URL, get_data_filepath('rss', RSS_FILENAME))
 
     # Get the latest episode number from the RSS feed
     rss_data = get_rss_feed_data(RSS_FILENAME)

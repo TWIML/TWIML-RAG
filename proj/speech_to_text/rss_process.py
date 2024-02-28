@@ -1,14 +1,15 @@
 import requests
 import xml.etree.ElementTree as ET
+from common.files import get_data_filepath
 
 # URL of the TWIML RSS feed
 RSS_URL = 'https://feeds.megaphone.fm/MLN2155636147'
 
 # Name of the RSS file to save it to
-RSS_FILENAME = 'rss/twiml_rss.xml'
+RSS_FILENAME = 'twiml_rss.xml'
 
 
-def get_rss_feed(rss_url, rss_filename):
+def get_rss_feed(rss_url, rss_filepath):
     """
     Get RSS feed from a website and save it to twiml_rss.xml
     :return: None
@@ -18,11 +19,11 @@ def get_rss_feed(rss_url, rss_filename):
 
     # If the response was successful, save the RSS file as xml
     if response.status_code == 200:
-        with open(rss_filename, 'wb') as f:
+        with open(rss_filepath, 'wb') as f:
             f.write(response.content)
 
 
-def get_rss_feed_data(rss_filename):
+def get_rss_feed_data(rss_filepath):
     """
     Given a rss feed from, read it and convert it into a format that is easy to use
     :param rss_filename: Name of the rss feed file
@@ -35,7 +36,7 @@ def get_rss_feed_data(rss_filename):
     # Define the namespace
     namespaces = {'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'}
 
-    tree = ET.parse(rss_filename)
+    tree = ET.parse(rss_filepath)
     root = tree.getroot()
     for item in root.findall('./channel/item'):
         title = item.find('title').text
@@ -66,8 +67,8 @@ def get_rss_feed_data(rss_filename):
 
 
 if __name__ == '__main__':
-    get_rss_feed(RSS_URL, RSS_FILENAME)
-    podcast_data = get_rss_feed_data(RSS_FILENAME)
+    get_rss_feed(RSS_URL, get_data_filepath('rss', RSS_FILENAME))
+    podcast_data = get_rss_feed_data(get_data_filepath('rss', RSS_FILENAME))
     print('Total episodes: ', len(podcast_data))
     print('Latest episode: ', list(podcast_data)[0])
     print(podcast_data[list(podcast_data)[0]])
