@@ -1,19 +1,19 @@
-FROM nvcr.io/nvidia/pytorch:22.04-py3
+FROM nvcr.io/nvidia/pytorch:24.02-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /python-docker
 
-COPY requirements.txt requirements.txt
+COPY ./speech_to_text/requirements.txt ./requirements.txt
 
 RUN apt-get update -q && \
     apt-get install -y --no-install-recommends ffmpeg && \
     apt-get clean autoclean && apt-get autoremove --yes && \
     pip3 install --upgrade pip && \
-    pip3 install -r requirements.txt
+    pip3 install -r ./requirements.txt
 
 # Preload model so that startup time isn't too slow
-RUN python3 -c 'import whisper;whisper.load_model("large", device="cpu")'
+RUN python3 -c 'import whisper;whisper.load_model("tiny", device="cpu")'
 
 COPY . .
 
@@ -24,4 +24,4 @@ RUN pip install -U pydantic
 # Set the GOOGLE_APPLICATION_CREDENTIALS environment variable
 ENV GOOGLE_APPLICATION_CREDENTIALS credentials.json
 
-CMD [ "python3", "run.py"]
+CMD [ "python3", "-m", "speech_to_text.run"]

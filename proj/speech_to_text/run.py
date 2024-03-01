@@ -1,5 +1,7 @@
-from google_cloud_auth import gcloud_auth
-from googleapiclient.discovery import build
+import os, sys
+sys.path.append(os.path.dirname(__file__))
+# from google_cloud_auth import gcloud_auth
+# from googleapiclient.discovery import build
 from google_cloud_utils import get_latest_episode_from_drive
 from utils import check_required_dirs
 from pipeline import run_pipeline
@@ -13,7 +15,7 @@ def get_latest_ep_from_rss():
     get_rss_feed(RSS_URL, get_data_filepath('rss', RSS_FILENAME))
 
     # Get the latest episode number from the RSS feed
-    rss_data = get_rss_feed_data(RSS_FILENAME)
+    rss_data = get_rss_feed_data(get_data_filepath('rss', RSS_FILENAME))
     latest_ep = max([int(episode) for episode in rss_data.keys() if episode.isnumeric()])
     return latest_ep
 
