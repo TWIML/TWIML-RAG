@@ -13,7 +13,7 @@ RUN apt-get update -q && \
     pip3 install -r ./requirements.txt
 
 # Preload model so that startup time isn't too slow
-RUN python3 -c 'import whisper;whisper.load_model("tiny", device="cpu")'
+RUN python3 -c 'import whisper;whisper.load_model("large", device="cpu")'
 
 COPY . .
 
