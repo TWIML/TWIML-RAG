@@ -1,6 +1,6 @@
 google-api-python-client
 google-cloud-secret-manager
-speechbrain
+git+https://github.com/Adel-Moumen/pyannote-audio.git@ba04fcd9c30eddca167e60cfe3137dfe4a4418ca
 python-dotenv
 torch
 torchaudio
@@ -17,5 +17,6 @@ jiwer
 spacy
 jellyfish
 whisper-normalizer
-pyannote-audio
 whisper_pyannote_fusion
+protobuf==3.20.0
+pydantic
