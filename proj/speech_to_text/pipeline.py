@@ -1,53 +1,17 @@
 import argparse
 import json
 import os
-import requests
 
 import whisper_pyannote_fusion
 
-from speaker_identification import run_llm_speaker_identification
-from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
-from utils import check_required_dirs, check_environment_vars
+from speaker_identification import add_speaker_identification
+from common.rss import download_mp3, get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
+from common.checks import check_required_dirs, check_environment_vars
 from google_drive.utils import upload_files_to_drive
 from common.files import get_data_dirpath, get_data_filepath
 
 check_environment_vars()
 HUGGING_FACE_API_KEY = os.environ['HUGGING_FACE_API_KEY']
-
-
-def download_mp3(url_data, filename_mp3):
-    """
-    Download the mp3 file from the url
-    :param url_data: MP3 podcast url
-    :param filename_mp3: Filename of the mp3 file
-    :return:
-    """
-    # Download the mp3 file
-    r = requests.get(url_data)
-    with open(filename_mp3, 'wb') as f:
-        f.write(r.content)
-
-
-def add_speaker_identification(transcript, speakers_json_filename):
-    """
-    Add the speaker identification to the transcript
-    """
-    speakers = transcript['speakers']
-
-    if not os.path.exists(speakers_json_filename):
-        # Do the speaker identification using LLM
-        speakers_dict = run_llm_speaker_identification(transcript)
-        # Save the speakers to the json file
-        with open(speakers_json_filename, 'w') as f:
-            json.dump(speakers_dict, f)
-    else:
-        with open(speakers_json_filename, 'r') as f:
-            speakers_dict = json.load(f)
-
-    speakers = [speakers_dict.get(speaker, "Unknown Speaker") for speaker in speakers]
-    transcript['speakers'] = speakers
-
-    return transcript
 
 
 def process_episode(episode):

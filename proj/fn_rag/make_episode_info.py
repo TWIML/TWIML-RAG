@@ -45,7 +45,7 @@ def get_episode_title(episode_info_json_filename, episode_num):
 
 
 if __name__ == '__main__':
-    episode_info_json_filename = '../fn_rag/episode_info.json'
+    episode_info_json_filename = 'episode_info.json'
     make_episode_info(episode_info_json_filename)
     episode_title = get_episode_title(episode_info_json_filename, '123')
     print(episode_title)

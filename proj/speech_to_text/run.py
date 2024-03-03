@@ -1,7 +1,7 @@
 from google_drive.utils import get_latest_episode_from_drive
-from utils import check_required_dirs
+from common.checks import check_required_dirs
 from pipeline import run_pipeline
-from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
+from common.rss import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
 from common.files import get_data_filepath
 
 # Get latest episode number from RSS feed
