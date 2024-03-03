@@ -1,4 +1,4 @@
-from google_cloud_utils import get_latest_episode_from_drive
+from google_drive.utils import get_latest_episode_from_drive
 from utils import check_required_dirs
 from pipeline import run_pipeline
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME

@@ -8,7 +8,7 @@ import whisper_pyannote_fusion
 from speaker_identification import run_llm_speaker_identification
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
 from utils import check_required_dirs, check_environment_vars
-from google_cloud_utils import upload_files_to_drive
+from google_drive.utils import upload_files_to_drive
 from common.files import get_data_dirpath, get_data_filepath
 
 check_environment_vars()

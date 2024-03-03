@@ -1,15 +1,39 @@
 import os
-from google.cloud import secretmanager
 from googleapiclient.http import MediaFileUpload
-from google_cloud_auth import gcloud_auth
 from googleapiclient.discovery import build
 from dotenv import dotenv_values, find_dotenv
+from google.auth import default
+from google.auth.transport.requests import Request
+from google.auth.exceptions import DefaultCredentialsError
 
 config = dotenv_values(find_dotenv(".config"))
 
+def auth():
+  credentials = None
+
+  try:
+    credentials, _ = default(
+        scopes=['https://www.googleapis.com/auth/drive'],
+    )
+  except DefaultCredentialsError:
+    print('No credentials found. Run gcloud auth application-default login'
+          ' --impersonate-service-account SERVICE_ACCOUNT_EMAIL to configure '
+          'the service account, or set the GOOGLE_APPLICATION_CREDENTIALS '
+          'environment variable to a service account key file.')
+
+  if credentials and not credentials.valid:
+    credentials.refresh(Request())
+
+  if credentials and credentials.valid:
+    # print("Credentials valid.")
+    return credentials
+  else:
+    print("Credentials invalid.")
+    return None
+  
 
 def get_drive_client():
-    creds = gcloud_auth()
+    creds = auth()
 
     if creds is None or not creds.valid:
         print('Service account credentials not found. Exiting.')
