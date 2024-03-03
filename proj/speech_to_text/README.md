@@ -27,11 +27,20 @@ Notes:
 - The tag `twiml:speech_to_tex` is used to identify the docker image. It will automatically run `speech_to_text/run.py` when it starts up. 
 - Replace `[LOCAL_PATH_TO_CREDENTIALS_FILE]` with the path to your local copy of the credentials file for the Google Cloud service account. 
 - You can remove `--gpus all` if your machine doesn't have GPUs. 
-- If you want to access the container interactively, you can use the `--it` flag to get inside the docker image:
+
+If you want to access the container interactively, you can use the `--it` flag to get inside the docker image:
 
 ```bash
 docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/credentials.json -v /Users/sam/Downloads/twiml-rag-sa-credentials.json:/tmp/keys/credentials.json:ro --gpus all -it twiml:speech_to_text /bin/sh
 ```
+
+To run the pipeline once you're in the container use the following command:
+
+```bash
+python3 -m speech_to_text.run
+```
+
+You can use this to run the pipeline on your local machine as well. Be sure you're in the `proj` directory when you run it.
 
 ## Deploying to Google Cloud
 
