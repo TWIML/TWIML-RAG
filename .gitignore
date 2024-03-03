@@ -3,7 +3,6 @@ data_input
 .env
 rag/.env
 data_output
-secrets.toml
 config.py
 proj/data/*
 **/qdrant/*

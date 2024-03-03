@@ -1,7 +1,3 @@
-import os, sys
-sys.path.append(os.path.dirname(__file__))
-# from google_cloud_auth import gcloud_auth
-# from googleapiclient.discovery import build
 from google_cloud_utils import get_latest_episode_from_drive
 from utils import check_required_dirs
 from pipeline import run_pipeline

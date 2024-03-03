@@ -76,13 +76,6 @@ def get_drive_folder_id(service, query=''):
     return folder_id
 
 
-def get_secret(secret_id):
-    client = secretmanager.SecretManagerServiceClient()
-    name = f'projects/{config["GCP_PROJECT_ID"]}/secrets/{secret_id}/versions/latest'
-    response = client.access_secret_version(name=name)
-    return response.payload.data.decode('UTF-8')
-
-
 def upload_files_to_drive(files, gd_folder_name, skip_existing=True):
     """
     Upload the given files to the given folder in Google Drive

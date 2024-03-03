@@ -7,11 +7,12 @@ import whisper_pyannote_fusion
 
 from speaker_identification import run_llm_speaker_identification
 from rss_process import get_rss_feed, get_rss_feed_data, RSS_URL, RSS_FILENAME
-from utils import check_required_dirs
-from google_cloud_utils import get_secret, upload_files_to_drive
+from utils import check_required_dirs, check_environment_vars
+from google_cloud_utils import upload_files_to_drive
 from common.files import get_data_dirpath, get_data_filepath
 
-HUGGING_FACE_API_KEY = get_secret('HUGGING_FACE_API_KEY')
+check_environment_vars()
+HUGGING_FACE_API_KEY = os.environ['HUGGING_FACE_API_KEY']
 
 
 def download_mp3(url_data, filename_mp3):
@@ -110,6 +111,7 @@ def run_pipeline(start, end=None):
     # Prerequisites
     # Check the folders exist
     check_required_dirs()
+    check_environment_vars()
 
     # Download the RSS feed if the file does not exist, or if we have -1 as the start
     if not os.path.exists(get_data_filepath('rss', RSS_FILENAME)) or start == -1:
