@@ -1,12 +1,12 @@
 import os
-
 from google.cloud import secretmanager
 from googleapiclient.http import MediaFileUpload
 from google_cloud_auth import gcloud_auth
 from googleapiclient.discovery import build
-from dotenv import dotenv_values
+from dotenv import dotenv_values, find_dotenv
 
-config = dotenv_values(".config")
+config = dotenv_values(find_dotenv(".config"))
+
 
 def get_drive_client():
     creds = gcloud_auth()
@@ -34,6 +34,7 @@ def get_latest_episode_from_drive():
 
 def get_rag_drive_id():
     return config['DRIVE_FOLDER_ID']
+
 
 def drive_query(service, query):
     twiml_rag_drive = get_rag_drive_id()

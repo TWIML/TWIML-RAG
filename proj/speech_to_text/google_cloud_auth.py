@@ -19,7 +19,7 @@ def gcloud_auth():
     credentials.refresh(Request())
 
   if credentials and credentials.valid:
-    print("Credentials valid.")
+    # print("Credentials valid.")
     return credentials
   else:
     print("Credentials invalid.")

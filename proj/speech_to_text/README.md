@@ -1,22 +1,46 @@
 # Speech to Text
 
-## Running Local dockerfile
+## Building the Container
 
 To build the local dockerfile, run the following command:
 
 ```bash
-docker build -t twiml:speech_to_text . -f Dockerfile.local
+cd proj
+docker build -t twiml:speech_to_text -f speech_to_text/Dockerfile.local .
 ```
 
-This will use the `Dockerfile.local` to create a docker image in your computer with the tag `twiml:speech_to_text`.
+Notes: 
+
+- This will use the `Dockerfile.local` to create a docker image in your computer with the tag `twiml:speech_to_text`.
+- The Dockerfile preloads whisper-large model. You can replace `large` with `tiny` for smoke-testing.
+
+## Running the Speech-to-Text Pipeline
 
 To run the local dockerfile, run the following command:
 
 ```bash
-docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 twiml:speech_to_text
+docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/credentials.json -v [LOCAL_PATH_TO_CREDENTIALS_FILE]:/tmp/keys/credentials.json:ro --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -it twiml:speech_to_text
 ```
 
-We use the tag `twiml:speech_to_tex` to run the docker image. It will run `run.py` when it starts up. If you want to use it interactively, you have to use `--it` flag and you can get inside the docker image.
+Notes:
+
+- The tag `twiml:speech_to_tex` is used to identify the docker image. It will automatically run `speech_to_text/run.py` when it starts up. 
+- Replace `[LOCAL_PATH_TO_CREDENTIALS_FILE]` with the path to your local copy of the credentials file for the Google Cloud service account. 
+- You can remove `--gpus all` if your machine doesn't have GPUs. 
+
+If you want to access the container interactively, you can use the `--it` flag to get inside the docker image:
+
+```bash
+docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/credentials.json -v /Users/sam/Downloads/twiml-rag-sa-credentials.json:/tmp/keys/credentials.json:ro --gpus all -it twiml:speech_to_text /bin/sh
+```
+
+To run the pipeline once you're in the container use the following command:
+
+```bash
+python3 -m speech_to_text.run
+```
+
+You can use this to run the pipeline on your local machine as well. Be sure you're in the `proj` directory when you run it.
 
 ## Deploying to Google Cloud
 
