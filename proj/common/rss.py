@@ -66,6 +66,19 @@ def get_rss_feed_data(rss_filepath):
     return rss_data
 
 
+def download_mp3(url_data, filename_mp3):
+    """
+    Download the mp3 file from the url
+    :param url_data: MP3 podcast url
+    :param filename_mp3: Filename of the mp3 file
+    :return:
+    """
+    # Download the mp3 file
+    r = requests.get(url_data)
+    with open(filename_mp3, 'wb') as f:
+        f.write(r.content)
+
+
 if __name__ == '__main__':
     get_rss_feed(RSS_URL, get_data_filepath('rss', RSS_FILENAME))
     podcast_data = get_rss_feed_data(get_data_filepath('rss', RSS_FILENAME))

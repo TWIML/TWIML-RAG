@@ -1,9 +1,10 @@
 import json
 import os
 from langchain import OpenAI, PromptTemplate
-from google_cloud_utils import get_secret
+from common.checks import check_environment_vars
 
-OPENAI_API_KEY = get_secret('OPENAI_API_KEY')
+check_environment_vars()
+OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 
 # Template for the prompt for the speaker identification
 speaker_id_template = """
@@ -19,6 +20,27 @@ Description:
 Transcript:
 "{transcript}"
 """
+
+def add_speaker_identification(transcript, speakers_json_filename):
+    """
+    Add the speaker identification to the transcript
+    """
+    speakers = transcript['speakers']
+
+    if not os.path.exists(speakers_json_filename):
+        # Do the speaker identification using LLM
+        speakers_dict = run_llm_speaker_identification(transcript)
+        # Save the speakers to the json file
+        with open(speakers_json_filename, 'w') as f:
+            json.dump(speakers_dict, f)
+    else:
+        with open(speakers_json_filename, 'r') as f:
+            speakers_dict = json.load(f)
+
+    speakers = [speakers_dict.get(speaker, "Unknown Speaker") for speaker in speakers]
+    transcript['speakers'] = speakers
+
+    return transcript
 
 
 def run_llm_speaker_identification(transcript):

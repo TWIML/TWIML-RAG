@@ -2,11 +2,10 @@ import json
 import os
 import whisper_pyannote_fusion
 
-from google_cloud_utils import get_secret
 from pipeline import download_mp3, add_speaker_identification
 from common.files import get_data_dirpath, get_data_filepath
 
-HUGGING_FACE_API_KEY = get_secret('HUGGING_FACE_API_KEY')
+HUGGING_FACE_API_KEY = os.environ['HUGGING_FACE_API_KEY']
 
 
 def process_episode_whisper_x(episode):

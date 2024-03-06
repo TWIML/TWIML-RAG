@@ -1,8 +1,7 @@
 import datetime
 import os
 
-from google_cloud_auth import gcloud_auth
-from google_cloud_utils import get_rag_drive_id, get_drive_folder_id, drive_query
+from utils import auth as gcloud_auth, get_rag_drive_id, get_drive_folder_id, drive_query
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from common.files import get_data_dirpath, get_data_filepath

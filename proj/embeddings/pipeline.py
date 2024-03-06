@@ -13,7 +13,7 @@ from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
 
 from .config import QDRANT_URL, QDRANT_API_KEY
-from speech_to_text.rss_process import get_rss_feed_data, RSS_FILENAME, get_rss_feed, RSS_URL
+from common.rss import get_rss_feed_data, RSS_FILENAME, get_rss_feed, RSS_URL
 
 def get_redirect_url(url):
     """
