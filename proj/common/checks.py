@@ -10,7 +10,7 @@ def check_required_dirs():
     required_dirs = ['podcasts', 'asr', 'transcripts', 'markdown', 'rss']
     for required_dir in required_dirs:
         if not os.path.exists(get_data_dirpath(required_dir)):
-            os.mkdir(get_data_dirpath(required_dir))
+            os.makedirs(get_data_dirpath(required_dir))
 
 def check_environment_vars():
     """
