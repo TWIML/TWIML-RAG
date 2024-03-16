@@ -1,10 +1,8 @@
 google-api-python-client
-google-cloud-secret-manager
 git+https://github.com/Adel-Moumen/pyannote-audio.git@ba04fcd9c30eddca167e60cfe3137dfe4a4418ca
-python-dotenv
-torch
-torchaudio
+#pyannote-audio
 faster-whisper
+python-dotenv
 openai==0.28.1
 transformers
 ffmpeg-python>=0.2

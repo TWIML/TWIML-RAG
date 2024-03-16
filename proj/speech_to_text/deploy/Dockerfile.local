@@ -1,4 +1,6 @@
-FROM nvcr.io/nvidia/pytorch:24.02-py3
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
+
+# FROM nvcr.io/nvidia/pytorch:24.02-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -6,17 +8,17 @@ WORKDIR /python-docker
 
 COPY ./speech_to_text/requirements.txt ./requirements.txt
 
+ENV PIP_IGNORE_INSTALLED 0
+
 RUN apt-get update -q && \
     apt-get install -y --no-install-recommends ffmpeg && \
+    apt-get install -y git && \
     apt-get clean autoclean && apt-get autoremove --yes && \
     pip3 install --upgrade pip && \
-    pip3 install -r ./requirements.txt
+    python3 -m pip install -r ./requirements.txt
 
 # Preload model so that startup time isn't too slow
-# 'tiny' is convenient for testing
-#RUN python3 -c 'import whisper;whisper.load_model("tiny", device="cpu")'
-# 'large' is preferred for production
-RUN python3 -c 'import whisper;whisper.load_model("large", device="cpu")'
+RUN python3 -c 'import whisper;whisper.load_model("large-v2", device="cuda")'
 
 COPY . .
 
